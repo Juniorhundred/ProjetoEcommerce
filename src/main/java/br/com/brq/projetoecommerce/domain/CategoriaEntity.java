@@ -8,6 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.modelmapper.ModelMapper;
+
+import br.com.brq.projetoecommerce.dto.CategoriaDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,15 +21,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "categoria")
 public class CategoriaEntity implements Serializable {
-	
+
 	private static final long serialVersionUID = 6033287835050072042L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idCategoria;
 	private String nome;
-	
-	
-	
 
+	public CategoriaDTO toDTO() {
+		var mapper = new ModelMapper();
+		return mapper.map(this, CategoriaDTO.class);
+
+	}
 }
