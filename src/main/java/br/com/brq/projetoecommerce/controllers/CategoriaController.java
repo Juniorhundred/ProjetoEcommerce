@@ -18,59 +18,45 @@ import br.com.brq.projetoecommerce.domain.CategoriaEntity;
 import br.com.brq.projetoecommerce.dto.CategoriaDTO;
 import br.com.brq.projetoecommerce.services.CategoriaService;
 
-
 @RestController
 @RequestMapping(path = "categorias")
-public class CategoriaController  {
+public class CategoriaController {
 
 	@Autowired
 	private CategoriaService categoriaService;
-	
+
 	@GetMapping(value = "buscar/{id}")
-	public ResponseEntity<CategoriaDTO> busca (@PathVariable("id")Integer id){
-		CategoriaEntity enty = categoriaService.buscarCategoriaId(id); //CategoriaEntity -> {id 1, nome 1}
-		CategoriaDTO dto = enty.toDTO(); //Entidade  -> DTO
-		return ResponseEntity.ok().body(dto); //CategoriaDTO
+	public ResponseEntity<CategoriaDTO> busca(@PathVariable("id") Integer id) {
+		CategoriaEntity enty = categoriaService.buscarCategoriaId(id); // CategoriaEntity -> {id 1, nome 1}
+		CategoriaDTO dto = enty.toDTO(); // Entidade -> DTO
+		return ResponseEntity.ok().body(dto); // CategoriaDTO
 	}
-	
- 
-	
+
 	@GetMapping
-	public ResponseEntity<List<CategoriaDTO>> buscarTodasCategorias(){
+	public ResponseEntity<List<CategoriaDTO>> buscarTodasCategorias() {
 		List<CategoriaEntity> enty = categoriaService.listaTodasCategorias();
 		List<CategoriaDTO> listDTO = enty.stream().map(CategoriaEntity::toDTO).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDTO);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<CategoriaDTO> cadastra(@RequestBody CategoriaDTO dto){
+	public ResponseEntity<CategoriaDTO> cadastra(@RequestBody CategoriaDTO dto) {
 		CategoriaEntity enty = categoriaService.salvar(dto.toEntity());
 		CategoriaDTO dtoSave = enty.toDTO();
 		return ResponseEntity.ok().body(dtoSave);
-		
 	}
-	
-	
-	
+
 	@PutMapping(value = "{id}")
 	public ResponseEntity<CategoriaDTO> alterar(@RequestBody CategoriaDTO dto, @PathVariable("id") int id) {
-		
-		CategoriaEntity enty = categoriaService.alterar(dto.toEntity());
-		
+		CategoriaEntity enty = categoriaService.alterar(id, dto.toEntity());
 		return ResponseEntity.ok().body(enty.toDTO());
-		
 	}
 	
-	
-	
-	
-	//Deletar
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete (@PathVariable int id) {
+	public ResponseEntity<Void> delete(@PathVariable int id) {
 		this.categoriaService.deletar(id);
 		return ResponseEntity.ok().build();
 	}
+}
 	
-
-	}
 

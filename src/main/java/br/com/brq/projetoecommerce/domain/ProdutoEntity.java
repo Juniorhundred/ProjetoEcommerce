@@ -13,12 +13,17 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.modelmapper.ModelMapper;
+
+import br.com.brq.projetoecommerce.dto.ProdutoDTO;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table (name = "produto")
@@ -39,10 +44,13 @@ public class ProdutoEntity implements Serializable {
 		inverseJoinColumns = {@JoinColumn(name = "idCategoria")})
 	private List<CategoriaEntity> categorias;
 	
-	@OneToMany
-	@JoinColumn(name="idImagem")
-	private List <ImagemEntity> imagens;
+	@OneToMany	
+	private List<ImagemEntity> imagens;
 
+	public ProdutoDTO toDTO() {
+		var mapper = new ModelMapper();
+		return mapper.map(this, ProdutoDTO.class);
+
+	}
 	
 }
-	

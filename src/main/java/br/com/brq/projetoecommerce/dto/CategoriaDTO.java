@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class CategoriaDTO {
 
 	private Integer idCategoria;
-	private String nome;
+	private String nomeCategoria;
 
 	public CategoriaEntity toEntity() {
 		var mapper = new ModelMapper();
