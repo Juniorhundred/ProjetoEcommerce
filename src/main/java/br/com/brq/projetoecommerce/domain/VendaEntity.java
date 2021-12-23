@@ -35,15 +35,17 @@ public class VendaEntity implements Serializable {
 
 	private String dataVenda;
 
-	@ManyToOne
+	@OneToMany
 	private List<ItemVendaEntity> itemVenda;
 
-	@OneToMany
+	@ManyToOne
 	private UsuarioEntity usuario;
 
 	public VendaDTO toDTO() {
 		var mapper = new ModelMapper();
 		return mapper.map(this, VendaDTO.class);
 	}
+	
+	
 }
 

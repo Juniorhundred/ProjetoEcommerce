@@ -14,10 +14,11 @@ import org.modelmapper.ModelMapper;
 
 import br.com.brq.projetoecommerce.dto.ItemVendaDTO;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+@Builder
 @Data
 @Entity
 @AllArgsConstructor

@@ -8,10 +8,12 @@ import br.com.brq.projetoecommerce.domain.ItemVendaEntity;
 import br.com.brq.projetoecommerce.domain.UsuarioEntity;
 import br.com.brq.projetoecommerce.domain.VendaEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class VendaDTO {

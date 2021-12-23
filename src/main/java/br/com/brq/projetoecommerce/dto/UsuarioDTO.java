@@ -6,14 +6,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 import org.modelmapper.ModelMapper;
-
-
 
 import br.com.brq.projetoecommerce.domain.UsuarioEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UsuarioDTO {
 
 private Integer usuarioId;

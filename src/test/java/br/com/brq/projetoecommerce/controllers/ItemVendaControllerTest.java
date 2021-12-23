@@ -20,43 +20,45 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.brq.projetoecommerce.dto.VendaDTO;
+import br.com.brq.projetoecommerce.dto.ItemVendaDTO;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class VendaControllerTest {
-
+public class ItemVendaControllerTest {
+	
 	@Autowired
 	private MockMvc mockMvc;
 	
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Test
-	void BuscarIdVendaTest() throws Exception{
-		
-		ResultActions response = mockMvc.perform(get("/venda/1").contentType("application/json"));
-		
+	void buscarIdTest() throws Exception {
+
+		ResultActions response = mockMvc.perform(get("/itemvenda/1").contentType("application/json"));
+
 		MvcResult result = response.andReturn();
-		
+
 		String resultStr = result.getResponse().getContentAsString();
-				
-		VendaDTO vendaDTO = objectMapper.readValue(resultStr, VendaDTO.class);
+
+		ItemVendaDTO itemVendaDTO = objectMapper.readValue(resultStr, ItemVendaDTO.class);
 		
+
+		// apenas comparando o status da resposta
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(vendaDTO.getIdVenda()).isEqualTo(1);
-		
+		assertThat(itemVendaDTO.getIdItemVenda()).isEqualTo(1);
+
 	}
 	
 	@Test
 	void buscarTodasImagensTest() throws Exception {
 
-		ResultActions response = mockMvc.perform(get("/venda").contentType("application/json"));
+		ResultActions response = mockMvc.perform(get("/itemvenda").contentType("application/json"));
 		MvcResult result = response.andReturn();
 
 		String resultStr = result.getResponse().getContentAsString();
 
-		VendaDTO[] list = objectMapper.readValue(resultStr, VendaDTO[].class);
+		ItemVendaDTO[] list = objectMapper.readValue(resultStr, ItemVendaDTO[].class);
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertThat(list.length >= 0).isTrue();
@@ -64,57 +66,58 @@ public class VendaControllerTest {
 	
 	@Test
 	void cadastrarTest() throws JsonProcessingException, Exception {
-		VendaDTO dto = this.createValidVenda();
+		ItemVendaDTO dto = this.createValidItemVenda();
 
 		ResultActions response = mockMvc.perform(
-				post("/venda").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+				post("/itemvenda").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
 		String objStr = result.getResponse().getContentAsString();
 
-		VendaDTO dtoResult = objectMapper.readValue(objStr, VendaDTO.class);
+		ItemVendaDTO dtoResult = objectMapper.readValue(objStr, ItemVendaDTO.class);
 
-		assertThat(dtoResult.getIdVenda() >= 0).isTrue();
-		assertThat(dtoResult.getDataVenda()).isEqualTo(dto.getDataVenda());
+		assertThat(dtoResult.getIdItemVenda() > 0).isTrue();
+		assertThat(dtoResult.getItemQuantidade() >=0).isTrue();
 		
 	}
 	
 	@Test	
 	void alterarTest() throws Exception {
-		VendaDTO dto = this.createValidVenda();
-	
+		ItemVendaDTO dto = this.createValidItemVenda();
+
 		int id = 1;
-		
+
 		ResultActions response = mockMvc.perform(
-				put("/venda/" + id).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+				put("/itemvenda/" + id).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
 		String resultStr = result.getResponse().getContentAsString();
 
-		VendaDTO updated = objectMapper.readValue(resultStr, VendaDTO.class);
+		ItemVendaDTO updated = objectMapper.readValue(resultStr, ItemVendaDTO.class);
 
-		assertThat(updated.getIdVenda()).isEqualTo(id);
-		assertThat(updated.getDataVenda()).isEqualTo(dto.getDataVenda());
+		assertThat(updated.getIdItemVenda()).isEqualTo(id);
+		assertThat(updated.getItemQuantidade() >=0).isTrue();
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 
 	}
-	
 	
 	@Test	
 	void deleteTest() throws Exception {
 		int id = 1;
 
-		ResultActions response = mockMvc.perform(delete("/venda/" + id).contentType("application/json"));
+		ResultActions response = mockMvc.perform(delete("/itemvenda/" + id).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 	}
-
-	private VendaDTO createValidVenda() {
-		VendaDTO dto = VendaDTO.builder().dataVenda("17").build();
+	
+	private ItemVendaDTO createValidItemVenda() {			
+		ItemVendaDTO dto = ItemVendaDTO.builder().idItemVenda(1).itemQuantidade(1).build();
 		return dto;
 	}
+
+
 }

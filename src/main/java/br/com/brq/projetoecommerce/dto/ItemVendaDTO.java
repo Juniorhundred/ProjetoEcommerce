@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class ItemVendaDTO {
 
 	private Integer idItemVenda; 
-	private Integer quantidade;
+	private Integer itemQuantidade;
 	private List <ProdutoEntity> itemProduto;
 	
 	public ItemVendaEntity toEntity() {

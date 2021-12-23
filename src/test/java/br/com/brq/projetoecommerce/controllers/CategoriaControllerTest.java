@@ -28,6 +28,11 @@ import br.com.brq.projetoecommerce.dto.CategoriaDTO;
 @AutoConfigureMockMvc
 public class CategoriaControllerTest {
 	
+	@Autowired
+	private MockMvc mockMvc;
+	
+	private ObjectMapper objectMapper = new ObjectMapper();
+	
 	@Test
 	void buscarIdTest() throws Exception {
 
@@ -75,7 +80,7 @@ public class CategoriaControllerTest {
 
 		assertThat(dtoResult.getIdCategoria() > 0).isTrue();
 		assertThat(dtoResult.getNomeCategoria()).isEqualTo(dto.getNomeCategoria());
-		;
+		
 	}
 	
 	@Test	
