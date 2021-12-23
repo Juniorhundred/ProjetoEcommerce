@@ -17,7 +17,7 @@ public class CategoriaService {
 	private CategoriaRepository categoriaRepository;
 
 	public List<CategoriaEntity> listaTodasCategorias() {
-		return categoriaRepository.findAll();
+		return categoriaRepository.findAll(); // listMock
 	}
 
 	public CategoriaEntity salvar(CategoriaEntity categoria) {

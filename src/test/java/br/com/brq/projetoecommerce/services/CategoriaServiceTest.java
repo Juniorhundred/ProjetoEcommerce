@@ -36,14 +36,14 @@ public class CategoriaServiceTest {
 
 	@Test
 	void listaTodasCategoriasTest() {
-
+		
 		List<CategoriaEntity> listMock = new ArrayList<>();
 
 		CategoriaEntity categoria = this.createValidCategoria();
 		listMock.add(categoria);
 
 		when(categoriaRepository.findAll()).thenReturn(listMock);
-
+		
 		List<CategoriaEntity> list = this.categoriaService.listaTodasCategorias();
 
 		assertThat(list.size() >= 0).isTrue();

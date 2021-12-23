@@ -27,10 +27,6 @@ import br.com.brq.projetoecommerce.dto.CategoriaDTO;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CategoriaControllerTest {
-	@Autowired
-	private MockMvc mockMvc;
-
-	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Test
 	void buscarIdTest() throws Exception {
