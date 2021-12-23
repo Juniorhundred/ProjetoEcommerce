@@ -12,12 +12,14 @@ import org.modelmapper.ModelMapper;
 
 import br.com.brq.projetoecommerce.dto.CategoriaDTO;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @Table(name = "categoria")
 public class CategoriaEntity implements Serializable {
@@ -27,7 +29,7 @@ public class CategoriaEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idCategoria;
-	private String nome;
+	private String nomeCategoria;
 
 	public CategoriaDTO toDTO() {
 		var mapper = new ModelMapper();
@@ -35,3 +37,4 @@ public class CategoriaEntity implements Serializable {
 
 	}
 }
+

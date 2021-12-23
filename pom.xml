@@ -16,6 +16,13 @@
 	<description>br.com.brq.projetoecommerce</description>
 	<properties>
 		<java.version>11</java.version>
+		
+		<sonar.exclusions>
+			src/main/java/**/dto/**,
+			src/main/java/**/domain/**,
+			src/main/java/br/com/brq/projetoecommerce/ProjetoEcommerceApplication.java
+		</sonar.exclusions>
+		
 	</properties>
 	<dependencies>
 		<dependency>
