@@ -38,13 +38,13 @@ public class ProdutoEntity implements Serializable {
 	private double preco; 
 	private String descricao; 
 		
-	@ManyToMany
+	@ManyToMany//(cascade = CascadeType.ALL)
 	@JoinTable(name= "REL_PRODUTO_CATEGORIA", 
 		joinColumns = {@JoinColumn(name = "idProduto")},
 		inverseJoinColumns = {@JoinColumn(name = "idCategoria")})
 	private List<CategoriaEntity> categorias;
 	
-	@OneToMany	
+	@OneToMany//(cascade = CascadeType.REMOVE)	
 	private List<ImagemEntity> imagens;
 
 	public ProdutoDTO toDTO() {

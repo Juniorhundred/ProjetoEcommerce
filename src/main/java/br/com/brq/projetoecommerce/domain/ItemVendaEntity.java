@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "itemvenda")
+@Table(name = "item_venda")
 public class ItemVendaEntity implements Serializable{
 	 
 	private static final long serialVersionUID = 6755240900315097949L;
@@ -32,7 +32,7 @@ public class ItemVendaEntity implements Serializable{
 	@Id
 	private Integer idItemVenda;
 		
-	@OneToMany
+	@OneToMany//(cascade = CascadeType.ALL)
 	private List <ProdutoEntity> itemProduto;
 	
 	private Integer itemQuantidade;

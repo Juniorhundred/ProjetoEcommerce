@@ -27,7 +27,8 @@ public class CategoriaService {
 	public CategoriaEntity buscarCategoriaId(Integer id) {
 		Optional<CategoriaEntity> categoria = categoriaRepository.findById(id);
 		return categoria
-				.orElseThrow(() -> new ObjectNotFoundException(new CategoriaEntity(), "categoria não encontrada"));
+				.orElseThrow(() -> new ObjectNotFoundException(new CategoriaEntity(), "categoria não encontrada"));		
+
 	}
 
 	public CategoriaEntity alterar(Integer id, CategoriaEntity categoriaAlterada) throws ObjectNotFoundException {

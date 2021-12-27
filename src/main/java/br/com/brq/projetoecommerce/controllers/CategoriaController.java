@@ -25,11 +25,11 @@ public class CategoriaController {
 	@Autowired
 	private CategoriaService categoriaService;
 
-	@GetMapping(value = "buscar/{id}")
-	public ResponseEntity<CategoriaDTO> busca(@PathVariable("id") Integer id) {
-		CategoriaEntity enty = categoriaService.buscarCategoriaId(id); // CategoriaEntity -> {id 1, nome 1}
-		CategoriaDTO dto = enty.toDTO(); // Entidade -> DTO
-		return ResponseEntity.ok().body(dto); // CategoriaDTO
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<CategoriaDTO> buscarId(@PathVariable("id") Integer id) {
+		CategoriaEntity enty = categoriaService.buscarCategoriaId(id); 
+		CategoriaDTO dto = enty.toDTO(); 
+		return ResponseEntity.ok().body(dto); 
 	}
 
 	@GetMapping

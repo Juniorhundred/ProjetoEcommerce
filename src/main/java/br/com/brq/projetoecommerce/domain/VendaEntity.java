@@ -15,19 +15,18 @@ import org.modelmapper.ModelMapper;
 
 import br.com.brq.projetoecommerce.dto.VendaDTO;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "venda")
 public class VendaEntity implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +34,15 @@ public class VendaEntity implements Serializable {
 
 	private String dataVenda;
 
-	@OneToMany
-	private List<ItemVendaEntity> itemVenda;
+	@OneToMany//(cascade = CascadeType.PERSIST)
+	private List<ItemVendaEntity> itens;
 
+//	@ManyToMany(cascade = CascadeType.PERSIST)
+//	@JoinTable(name= "REL_ITEM_PRODUTO", 
+//		joinColumns = {@JoinColumn(name = "idVenda")},
+//		inverseJoinColumns = {@JoinColumn(name = "idItemVenda")})
+//	private List<CategoriaEntity> itens;
+	
 	@ManyToOne
 	private UsuarioEntity usuario;
 

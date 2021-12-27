@@ -1,5 +1,7 @@
 package br.com.brq.projetoecommerce.dto;
 
+import javax.validation.constraints.NotNull;
+
 import org.modelmapper.ModelMapper;
 
 import br.com.brq.projetoecommerce.domain.CategoriaEntity;
@@ -15,6 +17,8 @@ import lombok.NoArgsConstructor;
 public class CategoriaDTO {
 
 	private Integer idCategoria;
+	
+	//@NotNull(message = "Campo nome é obrigatório.")
 	private String nomeCategoria;
 
 	public CategoriaEntity toEntity() {

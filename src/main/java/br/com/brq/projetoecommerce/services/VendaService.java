@@ -1,13 +1,12 @@
 package br.com.brq.projetoecommerce.services;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.brq.projetoecommerce.domain.VendaEntity;
+import br.com.brq.projetoecommerce.exceptions.ObjetoNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.VendaRepository;
 
 @Service
@@ -21,19 +20,18 @@ public class VendaService {
 	}
 
 	public VendaEntity salvar(VendaEntity venda) {
-		return vendaRepository.save(venda);
+		return vendaRepository.save(venda); 
 	}
 
 	public VendaEntity buscarVendaId(Integer id) {
-		Optional<VendaEntity> venda = vendaRepository.findById(id);
-		return venda.orElseThrow(() -> new ObjectNotFoundException(new VendaEntity(), "Venda não encontrada"));
+		return this.vendaRepository.findById(id)
+				.orElseThrow( () -> new ObjetoNaoEncontradoException("Venda não encontrada nova versão") );
 	}
 
-	public VendaEntity alterar(Integer id, VendaEntity vendaAlterada) throws ObjectNotFoundException {
-		VendaEntity vendaEntity = buscarVendaId(id);
-		vendaEntity.setIdVenda(vendaAlterada.getIdVenda());
+	public VendaEntity alterar(Integer id, VendaEntity vendaAlterada) {
+		VendaEntity vendaEntity = buscarVendaId(id);		
 		vendaEntity.setDataVenda(vendaAlterada.getDataVenda());
-		vendaEntity.setItemVenda(vendaAlterada.getItemVenda());
+		vendaEntity.setItens(vendaAlterada.getItens());
 		vendaEntity.setUsuario(vendaAlterada.getUsuario());
 		return salvar(vendaEntity);
 	}

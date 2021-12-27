@@ -21,6 +21,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.brq.projetoecommerce.dto.CategoriaDTO;
+import br.com.brq.projetoecommerce.services.CategoriaService;
+import br.com.brq.projetoecommerce.utils.MockUtil;
 
 
 @ExtendWith(SpringExtension.class)
@@ -31,43 +33,55 @@ public class CategoriaControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	
+	@Autowired
+	private CategoriaService categoriaService;
+
+	private MockUtil mockUtil = new MockUtil();
+	
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Test
 	void buscarIdTest() throws Exception {
-
+		
+		CategoriaDTO dto = mockUtil.categoriaMock();
+		categoriaService.salvar(dto.toEntity());		 		
+		
 		ResultActions response = mockMvc.perform(get("/categorias/1").contentType("application/json"));
-
 		MvcResult result = response.andReturn();
 
 		String resultStr = result.getResponse().getContentAsString();
 
-		CategoriaDTO categoriaDTO = objectMapper.readValue(resultStr, CategoriaDTO.class);
-		
+		CategoriaDTO professorDTO = objectMapper.readValue(resultStr, CategoriaDTO.class);
 
-		// apenas comparando o status da resposta
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(categoriaDTO.getIdCategoria()).isEqualTo(1);
+		assertThat(professorDTO.getIdCategoria()).isEqualTo(1);
 
 	}
 	
 	@Test
-	void buscarTodasImagensTest() throws Exception {
+	void buscarTodasCategoriasTest() throws Exception {
+		
+		CategoriaDTO dto = mockUtil.categoriaMock();
+		categoriaService.salvar(dto.toEntity());
+		
+		System.out.println(dto);
 
 		ResultActions response = mockMvc.perform(get("/categorias").contentType("application/json"));
 		MvcResult result = response.andReturn();
+		
+		System.out.println(response);
 
 		String resultStr = result.getResponse().getContentAsString();
 
 		CategoriaDTO[] list = objectMapper.readValue(resultStr, CategoriaDTO[].class);
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(list.length >= 0).isTrue();
+		assertThat(list.length > 0).isTrue();
 	}
 	
 	@Test
 	void cadastrarTest() throws JsonProcessingException, Exception {
-		CategoriaDTO dto = this.createValidCategoria();
+		CategoriaDTO dto = mockUtil.categoriaMock();
 
 		ResultActions response = mockMvc.perform(
 				post("/categorias").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
@@ -85,7 +99,7 @@ public class CategoriaControllerTest {
 	
 	@Test	
 	void alterarTest() throws Exception {
-		CategoriaDTO dto = this.createValidCategoria();
+		CategoriaDTO dto = mockUtil.categoriaMock();
 
 		int id = 1;
 
@@ -106,7 +120,7 @@ public class CategoriaControllerTest {
 	
 	@Test	
 	void deleteTest() throws Exception {
-		int id = 1;
+		int id = 2;
 
 		ResultActions response = mockMvc.perform(delete("/categorias/" + id).contentType("application/json"));
 
