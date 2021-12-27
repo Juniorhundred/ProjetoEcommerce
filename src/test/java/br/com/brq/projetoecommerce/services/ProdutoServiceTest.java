@@ -40,8 +40,8 @@ public class ProdutoServiceTest {
 
 		List<ProdutoEntity> listMock = new ArrayList<>();
 
-		ProdutoEntity professor = this.createValidProduto();
-		listMock.add(professor);
+		ProdutoEntity produto = this.createValidProduto();
+		listMock.add(produto);
 
 		when(produtoRepository.findAll()).thenReturn(listMock);
 		

@@ -2,10 +2,10 @@ package br.com.brq.projetoecommerce.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.modelmapper.ModelMapper;
 
-import br.com.brq.projetoecommerce.domain.ItemVendaEntity;
-import br.com.brq.projetoecommerce.domain.UsuarioEntity;
 import br.com.brq.projetoecommerce.domain.VendaEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,11 +19,14 @@ import lombok.NoArgsConstructor;
 public class VendaDTO {
 
 	private Integer idVenda;
+	//@NotNull(message = "Campo data é obrigatório.")
 	private String dataVenda;
 
-	private List<ItemVendaEntity> itemVenda;
+	//@NotNull(message = "Campo produto é obrigatório.")
+	private List<ItemVendaDTO> itens;
 
-	private UsuarioEntity usuario;
+	//@NotNull(message = "Campo usuário é obrigatório.")
+	private UsuarioDTO usuario;
 
 	public VendaEntity toEntity() {
 		var mapper = new ModelMapper();

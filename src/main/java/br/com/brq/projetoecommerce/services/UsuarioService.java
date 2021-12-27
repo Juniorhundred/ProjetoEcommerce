@@ -1,7 +1,5 @@
 package br.com.brq.projetoecommerce.services;
 
-
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,63 +14,59 @@ import br.com.brq.projetoecommerce.dto.EnderecoDTO;
 import br.com.brq.projetoecommerce.dto.UsuarioDTO;
 import br.com.brq.projetoecommerce.repositories.UsuarioRepository;
 
-
-
 @Service
 public class UsuarioService {
 
-@Autowired
-private UsuarioRepository usuarioRepository;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
-@Autowired
-private EnderecoService enderecoService;
+	@Autowired
+	private EnderecoService enderecoService;
 
-public UsuarioEntity salvar(UsuarioEntity usuario) {
+	public UsuarioEntity salvar(UsuarioEntity usuario) {
 
-enderecoService.salvar(usuario.getEnderecos().get(0));
+		enderecoService.salvar(usuario.getEnderecos().get(0));
 
-return usuarioRepository.save(usuario);
-}
+		return usuarioRepository.save(usuario);
+	}
 
-public List<UsuarioEntity> listaTodasCategorias() {
-return usuarioRepository.findAll();
-}
+	public List<UsuarioEntity> listaTodasUsuarios() {
+		return usuarioRepository.findAll();
+	}
 
+	public UsuarioEntity buscarUsuarioId(Integer id) {
+		Optional<UsuarioEntity> usuario = usuarioRepository.findById(id);
+		return usuario.orElseThrow(() -> new ObjectNotFoundException(new UsuarioEntity(), "Usuario não encontrado"));
+	}
 
+	public UsuarioEntity alterar(int usuarioId, UsuarioDTO alteracao) {
+		Optional<UsuarioEntity> usuario = usuarioRepository.findById(usuarioId);
 
-public UsuarioEntity buscarUsuarioId(Integer id) {
-Optional<UsuarioEntity> usuario = usuarioRepository.findById(id);
-return usuario.orElseThrow(()-> new ObjectNotFoundException(new UsuarioEntity(), "Usuario não encontrado"));
-}
+		if (usuario.isPresent()) {
+			UsuarioEntity usuarioExistente = usuario.get();
 
-public UsuarioEntity alterar(int usuarioId, UsuarioDTO alteracao) {
-Optional<UsuarioEntity> usuario = usuarioRepository.findById(usuarioId);
+			usuarioExistente.setNome(alteracao.getNome());
+			usuarioExistente.setEmail(alteracao.getEmail());
+			usuarioExistente.setCelular(alteracao.getCelular());
+			usuarioExistente.setTelefone(alteracao.getTelefone());
 
-if (usuario.isPresent()) {
-UsuarioEntity usuarioExistente = usuario.get();
+//Validando se existem enderecos para serem alterado
+			if (!alteracao.getEnderecos().isEmpty()) {
+				int enderecoId = alteracao.getEnderecos().get(0).getEnderecoId();
+				List<EnderecoEntity> enderecos = alteracao.getEnderecos().stream().map(EnderecoDTO::toEntity)
+						.collect(Collectors.toList());
 
-usuarioExistente.setNome(alteracao.getNome());
-usuarioExistente.setEmail(alteracao.getEmail());
-usuarioExistente.setCelular(alteracao.getCelular());
-usuarioExistente.setTelefone(alteracao.getTelefone());
+				this.enderecoService.alterar(enderecoId, enderecos.get(0));
+			}
 
-//Validando se existem enderecos para serem alterados
-if (!alteracao.getEnderecos().isEmpty()) {
-int enderecoId = alteracao.getEnderecos().get(0).getEnderecoId();
-List<EnderecoEntity> enderecos = alteracao.getEnderecos().stream().map(EnderecoDTO::toEntity)
-.collect(Collectors.toList());
+			return this.usuarioRepository.save(usuarioExistente);
+		} else {
+			throw new RuntimeException("Usuario(a) nao encontrado(a)");
+		}
+	}
 
-this.enderecoService.alterar(enderecoId, enderecos.get(0));
-}
-
-return this.usuarioRepository.save(usuarioExistente);
-} else {
-throw new RuntimeException("Usuario(a) nao encontrado(a)");
-}
-}
-
-public void excluir(Integer id) {
-usuarioRepository.deleteById(id);
-}
+	public void excluir(Integer id) {
+		usuarioRepository.deleteById(id);
+	}
 
 }

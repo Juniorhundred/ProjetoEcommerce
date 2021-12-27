@@ -6,9 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +20,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.brq.projetoecommerce.domain.CategoriaEntity;
-import br.com.brq.projetoecommerce.domain.ImagemEntity;
+import br.com.brq.projetoecommerce.domain.ProdutoEntity;
 import br.com.brq.projetoecommerce.dto.ProdutoDTO;
+import br.com.brq.projetoecommerce.services.ProdutoService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -34,26 +31,31 @@ public class ProdutoControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@Autowired
+	private ProdutoService produtoService;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Test
 	void buscarIdTest() throws Exception {
+		
+		ProdutoDTO dto = this.createValidProduto();
+		ProdutoEntity enty = produtoService.salvar(dto.toEntity());				
 
-		ResultActions response = mockMvc.perform(get("/produtos/1").contentType("application/json"));
+		ResultActions response = mockMvc.perform(get("/produtos/"+ enty.getIdProduto()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
 		String resultStr = result.getResponse().getContentAsString();
 
 		ProdutoDTO produtoDTO = objectMapper.readValue(resultStr, ProdutoDTO.class);
-		System.out.println(produtoDTO);
-
-		// apenas comparando o status da resposta
+	
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(produtoDTO.getIdProduto()).isEqualTo(1);
+		assertThat(produtoDTO.getIdProduto()).isEqualTo(enty.getIdProduto());
 
-	}
+	}	
+	
 	
 	@Test
 	void buscarTodosProdutosTest() throws Exception {
@@ -127,17 +129,7 @@ public class ProdutoControllerTest {
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 	}
 	
-	private ProdutoDTO createValidProduto() {
-
-		List<CategoriaEntity> listMockCategoria = new ArrayList<>();
-		CategoriaEntity categoria = CategoriaEntity.builder().idCategoria(1).nomeCategoria("Celular").build();		
-		listMockCategoria.add(categoria);
-		
-		List<ImagemEntity> listMockImagem = new ArrayList<>();
-		ImagemEntity imagem = ImagemEntity.builder().idImagem(1).imagemProduto("Celular").build();		
-		listMockImagem.add(imagem);
-		
-		
+	private ProdutoDTO createValidProduto() {	
 		
 		ProdutoDTO dto = ProdutoDTO.builder().nome("Xiaomi").preco(2000).descricao("Celular").build();
 		return dto;

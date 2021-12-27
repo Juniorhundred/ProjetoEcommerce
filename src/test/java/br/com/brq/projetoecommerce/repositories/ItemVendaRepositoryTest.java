@@ -27,11 +27,9 @@ public class ItemVendaRepositoryTest {
 	@Test
 	void findByIdExistsTest() {
 
-		ItemVendaEntity itemVenda = this.createValidItemVenda();
+		ItemVendaEntity entity = this.testEntityManager.persist(new ItemVendaEntity());
 
-		this.testEntityManager.persist(itemVenda);
-
-		Optional<ItemVendaEntity> response = this.itemVendaRepository.findById(1);
+		Optional<ItemVendaEntity> response = this.itemVendaRepository.findById(entity.getIdItemVenda());
 
 		assertThat(response).isNotNull();
 	}
@@ -45,11 +43,11 @@ public class ItemVendaRepositoryTest {
 	}
 
 	@Test
-	void findAllTest() {
-
-		ItemVendaEntity itemVenda = this.createValidItemVenda();
-
-		this.testEntityManager.persist(itemVenda);
+	void findAllTest() {		
+		
+		ItemVendaEntity entity = this.testEntityManager.persist(new ItemVendaEntity());		
+		
+		this.testEntityManager.persist(entity);
 
 		List<ItemVendaEntity> list = this.itemVendaRepository.findAll();
 
@@ -69,17 +67,15 @@ public class ItemVendaRepositoryTest {
 	}
 
 	@Test
-	void deleteByIdTest() {
+	void deleteByIdTest() {		
 
-		ItemVendaEntity itemVenda = this.createValidItemVenda();
-
-		ItemVendaEntity saved = testEntityManager.persist(itemVenda);
+		ItemVendaEntity saved = testEntityManager.persist(new ItemVendaEntity());
 
 		this.itemVendaRepository.deleteById(saved.getIdItemVenda());
 
 		Optional<ItemVendaEntity> search = this.itemVendaRepository.findById(saved.getIdItemVenda());
 
-		assertThat(search).isEmpty();
+		assertThat(search).isEmpty();		
 	}
 
 	private ItemVendaEntity createValidItemVenda() {

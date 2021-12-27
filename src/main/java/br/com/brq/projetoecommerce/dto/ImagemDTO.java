@@ -1,5 +1,7 @@
 package br.com.brq.projetoecommerce.dto;
 
+import javax.validation.constraints.NotNull;
+
 import org.modelmapper.ModelMapper;
 
 import br.com.brq.projetoecommerce.domain.ImagemEntity;
@@ -15,6 +17,8 @@ import lombok.NoArgsConstructor;
 public class ImagemDTO {
 
 	private Integer idImagem;
+	
+	//@NotNull(message = "Campo imagem é obrigatório.")
 	private String imagemProduto;
 	
 	public ImagemEntity toEntity() {

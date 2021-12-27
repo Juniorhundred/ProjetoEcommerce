@@ -16,11 +16,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.yaml.snakeyaml.tokens.DocumentEndToken;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.brq.projetoecommerce.domain.ImagemEntity;
 import br.com.brq.projetoecommerce.dto.ImagemDTO;
+import br.com.brq.projetoecommerce.services.ImagemService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -29,24 +32,29 @@ public class ImagemControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@Autowired
+	private ImagemService imagemService;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Test
 	void buscarIdTest() throws Exception {
-
-		ResultActions response = mockMvc.perform(get("/imagens/1").contentType("application/json"));
+		
+		ImagemDTO dto = this.createValidImagem();
+		ImagemEntity enty = imagemService.salvar(dto.toEntity());
+		ResultActions response = mockMvc.perform(
+				get("/imagens/" + enty.getIdImagem()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));		
 
 		MvcResult result = response.andReturn();
 
 		String resultStr = result.getResponse().getContentAsString();
 
 		ImagemDTO imagemDTO = objectMapper.readValue(resultStr, ImagemDTO.class);
-		System.out.println(imagemDTO);
-
-		// apenas comparando o status da resposta
+	
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(imagemDTO.getIdImagem()).isEqualTo(1);
+		assertThat(imagemDTO.getIdImagem()).isEqualTo(enty.getIdImagem());
+		assertThat(imagemDTO.getImagemProduto()).isEqualTo(enty.getImagemProduto());
 
 	}
 	
