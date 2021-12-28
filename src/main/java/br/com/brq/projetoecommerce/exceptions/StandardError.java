@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class StandardError {
+<<<<<<< Updated upstream
 	
+=======
+>>>>>>> Stashed changes
 	protected Date timestamp;
 	protected Integer status;
 	protected String error;

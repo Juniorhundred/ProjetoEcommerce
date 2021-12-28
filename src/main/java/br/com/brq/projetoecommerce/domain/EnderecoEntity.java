@@ -1,7 +1,5 @@
 package br.com.brq.projetoecommerce.domain;
 
-
-
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -18,8 +16,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @Data
 @Entity
 @Builder
@@ -28,25 +24,21 @@ import lombok.NoArgsConstructor;
 @Table(name = "endereco")
 public class EnderecoEntity implements Serializable {
 
-private static final long serialVersionUID = 1430541589979579078L;
+	private static final long serialVersionUID = 1430541589979579078L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer enderecoId;
+	private String logradouro;
+	private String numero;
+	private String complemento;
+	private String cep;
+	private String bairro;
+	private String cidade;
+	private String estado;
 
-
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Integer enderecoId;
-private String logradouro;
-private String numero;
-private String complemento;
-private String cep;
-private String bairro;
-private String cidade;
-private String estado;
-
-
-
-public EnderecoDTO toDTO() {
-var mapper = new ModelMapper();
-return mapper.map(this, EnderecoDTO.class);
-}
+	public EnderecoDTO toDTO() {
+		var mapper = new ModelMapper();
+		return mapper.map(this, EnderecoDTO.class);
+	}
 }

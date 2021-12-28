@@ -34,6 +34,7 @@ public class VendaEntity implements Serializable {
 
 	private String dataVenda;
 
+<<<<<<< Updated upstream
 	@OneToMany//(cascade = CascadeType.PERSIST)
 	private List<ItemVendaEntity> itens;
 
@@ -43,6 +44,11 @@ public class VendaEntity implements Serializable {
 //		inverseJoinColumns = {@JoinColumn(name = "idItemVenda")})
 //	private List<CategoriaEntity> itens;
 	
+=======
+	@OneToMany
+	private List<ItemVendaEntity> itemVenda;
+
+>>>>>>> Stashed changes
 	@ManyToOne
 	private UsuarioEntity usuario;
 

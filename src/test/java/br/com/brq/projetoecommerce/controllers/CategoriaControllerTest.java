@@ -24,11 +24,11 @@ import br.com.brq.projetoecommerce.dto.CategoriaDTO;
 import br.com.brq.projetoecommerce.services.CategoriaService;
 import br.com.brq.projetoecommerce.utils.MockUtil;
 
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CategoriaControllerTest {
+<<<<<<< Updated upstream
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -40,6 +40,14 @@ public class CategoriaControllerTest {
 	
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
+=======
+
+	@Autowired
+	private MockMvc mockMvc;
+
+	private ObjectMapper objectMapper = new ObjectMapper();
+
+>>>>>>> Stashed changes
 	@Test
 	void buscarIdTest() throws Exception {
 		
@@ -51,13 +59,19 @@ public class CategoriaControllerTest {
 
 		String resultStr = result.getResponse().getContentAsString();
 
+<<<<<<< Updated upstream
 		CategoriaDTO professorDTO = objectMapper.readValue(resultStr, CategoriaDTO.class);
 
+=======
+		CategoriaDTO categoriaDTO = objectMapper.readValue(resultStr, CategoriaDTO.class);
+
+// apenas comparando o status da resposta
+>>>>>>> Stashed changes
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertThat(professorDTO.getIdCategoria()).isEqualTo(1);
 
 	}
-	
+
 	@Test
 	void buscarTodasCategoriasTest() throws Exception {
 		
@@ -78,7 +92,7 @@ public class CategoriaControllerTest {
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertThat(list.length > 0).isTrue();
 	}
-	
+
 	@Test
 	void cadastrarTest() throws JsonProcessingException, Exception {
 		CategoriaDTO dto = mockUtil.categoriaMock();
@@ -96,8 +110,8 @@ public class CategoriaControllerTest {
 		assertThat(dtoResult.getNomeCategoria()).isEqualTo(dto.getNomeCategoria());
 		
 	}
-	
-	@Test	
+
+	@Test
 	void alterarTest() throws Exception {
 		CategoriaDTO dto = mockUtil.categoriaMock();
 
@@ -117,8 +131,8 @@ public class CategoriaControllerTest {
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 
 	}
-	
-	@Test	
+
+	@Test
 	void deleteTest() throws Exception {
 		int id = 2;
 
@@ -128,8 +142,8 @@ public class CategoriaControllerTest {
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 	}
-	
-	private CategoriaDTO createValidCategoria() {			
+
+	private CategoriaDTO createValidCategoria() {
 		CategoriaDTO dto = CategoriaDTO.builder().nomeCategoria("Eletronicos").build();
 		return dto;
 	}
