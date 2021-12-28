@@ -28,7 +28,6 @@ import br.com.brq.projetoecommerce.utils.MockUtil;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CategoriaControllerTest {
-<<<<<<< Updated upstream
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -40,14 +39,7 @@ public class CategoriaControllerTest {
 	
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
-=======
 
-	@Autowired
-	private MockMvc mockMvc;
-
-	private ObjectMapper objectMapper = new ObjectMapper();
-
->>>>>>> Stashed changes
 	@Test
 	void buscarIdTest() throws Exception {
 		
@@ -59,14 +51,11 @@ public class CategoriaControllerTest {
 
 		String resultStr = result.getResponse().getContentAsString();
 
-<<<<<<< Updated upstream
 		CategoriaDTO professorDTO = objectMapper.readValue(resultStr, CategoriaDTO.class);
 
-=======
 		CategoriaDTO categoriaDTO = objectMapper.readValue(resultStr, CategoriaDTO.class);
 
 // apenas comparando o status da resposta
->>>>>>> Stashed changes
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertThat(professorDTO.getIdCategoria()).isEqualTo(1);
 

@@ -41,14 +41,7 @@ public class UsuarioEntity implements Serializable {
 	private String celular;
 	private String telefone;
 	private String email;
-<<<<<<< Updated upstream
 
-	@ManyToMany
-	@JoinTable(name = "REL_USUARIO_ENDERECO", joinColumns = { @JoinColumn(name = "usuarioId") }, inverseJoinColumns = {
-			@JoinColumn(name = "enderecoId") })
-	List<EnderecoEntity> enderecos;
-
-=======
 	
 	@ManyToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(name = "REL_USUARIO_ENDERECO", joinColumns = { @JoinColumn(name = "usuarioId") }, inverseJoinColumns = {
@@ -61,7 +54,6 @@ public class UsuarioEntity implements Serializable {
 	@ManyToOne
 	private UsuarioEntity usuario;
 	
->>>>>>> Stashed changes
 	public UsuarioDTO toDTO() {
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper.map(this, UsuarioDTO.class);
