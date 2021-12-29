@@ -3,6 +3,7 @@ package br.com.brq.projetoecommerce.domain;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+
 import javax.persistence.SequenceGenerator;
+
 import javax.persistence.Table;
 
 import org.modelmapper.ModelMapper;
@@ -22,6 +25,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -42,11 +46,18 @@ public class UsuarioEntity implements Serializable {
 	private String telefone;
 	private String email;
 
-	@ManyToMany
+	
+	@ManyToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(name = "REL_USUARIO_ENDERECO", joinColumns = { @JoinColumn(name = "usuarioId") }, inverseJoinColumns = {
 			@JoinColumn(name = "enderecoId") })
 	List<EnderecoEntity> enderecos;
+	
+	@OneToMany
+	private List<ItemVendaEntity> itemVenda;
 
+	@ManyToOne
+	private UsuarioEntity usuario;
+	
 	public UsuarioDTO toDTO() {
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper.map(this, UsuarioDTO.class);

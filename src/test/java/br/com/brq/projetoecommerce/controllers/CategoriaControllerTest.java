@@ -39,6 +39,7 @@ import br.com.brq.projetoecommerce.utils.MockUtil;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 
+
 	@Test
 	void buscarIdTest() throws Exception {
 
@@ -52,6 +53,9 @@ import br.com.brq.projetoecommerce.utils.MockUtil;
 
 		CategoriaDTO professorDTO = objectMapper.readValue(resultStr, CategoriaDTO.class);
 
+		CategoriaDTO categoriaDTO = objectMapper.readValue(resultStr, CategoriaDTO.class);
+
+// apenas comparando o status da resposta
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertThat(professorDTO.getIdCategoria()).isEqualTo(dto.getIdCategoria());
 
@@ -91,6 +95,7 @@ import br.com.brq.projetoecommerce.utils.MockUtil;
 		assertThat(dtoResult.getNomeCategoria()).isEqualTo(dto.getNomeCategoria());
 
 	}
+
 
 	@Test
 	void cadastrarCategoriaNullTest() throws JsonProcessingException, Exception {
@@ -143,4 +148,5 @@ import br.com.brq.projetoecommerce.utils.MockUtil;
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 	}
+
 }

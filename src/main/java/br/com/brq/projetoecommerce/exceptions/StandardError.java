@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class StandardError {
-	
+
 	protected Date timestamp;
 	protected Integer status;
 	protected String error;

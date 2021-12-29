@@ -3,6 +3,8 @@ package br.com.brq.projetoecommerce.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +28,7 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 
 	@PostMapping
-	public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody UsuarioDTO usuario) {
+	public ResponseEntity<UsuarioDTO> cadastrar(@Valid @RequestBody UsuarioDTO usuario) {
 		UsuarioEntity entity = usuarioService.salvar(usuario.toEntity());
 		UsuarioDTO dto = entity.toDTO();
 		return ResponseEntity.ok().body(dto);
@@ -35,7 +37,7 @@ public class UsuarioController {
 
 	@GetMapping
 	public ResponseEntity<List<UsuarioDTO>> listaTodosUsuarios() {
-		List<UsuarioEntity> result = usuarioService.listaTodasUsuarios();
+		List<UsuarioEntity> result = usuarioService.listaTodosUsuarios();
 		return ResponseEntity.ok().body(result.stream().map(UsuarioEntity::toDTO).collect(Collectors.toList()));
 	}
 
@@ -47,7 +49,7 @@ public class UsuarioController {
 	}
 
 	@PutMapping(value = "/{usuarioId}")
-	public ResponseEntity<UsuarioDTO> alterar(@PathVariable int usuarioId, @RequestBody UsuarioDTO usuarioAlterado) {
+	public ResponseEntity<UsuarioDTO> alterar(@PathVariable int usuarioId, @Valid @RequestBody UsuarioDTO usuarioAlterado) {
 		UsuarioEntity entity = usuarioService.alterar(usuarioId, usuarioAlterado);
 		return ResponseEntity.ok().body(entity.toDTO());
 	}
