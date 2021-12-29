@@ -1,6 +1,5 @@
 package br.com.brq.projetoecommerce.dto;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,11 +26,16 @@ public class UsuarioDTO {
 
 	@NotNull(message = "Campo obrigatório")
 	private String cpf;
-	private LocalDate dataDeNascimento;
+	@NotNull(message = "Campo obrigatório")
+	private String dataDeNascimento;
+	@NotNull(message = "Campo obrigatório")
 	private String celular;
+	@NotNull(message = "Campo obrigatório")
 	private String telefone;
+	@NotNull(message = "Campo obrigatório")
 	private String email;
 
+	@NotNull(message = "Campo obrigatório")
 	private List<EnderecoDTO> enderecos = new ArrayList<>();
 
 	public UsuarioEntity toEntity() {

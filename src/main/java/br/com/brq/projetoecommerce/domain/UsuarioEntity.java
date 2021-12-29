@@ -2,7 +2,6 @@
 package br.com.brq.projetoecommerce.domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -44,7 +43,7 @@ public class UsuarioEntity implements Serializable {
 	private Integer usuarioId;
 	private String nome;
 	private String cpf;
-	private LocalDate dataDeNascimento;
+	private String dataDeNascimento;
 	private String celular;
 	private String telefone;
 	private String email;
