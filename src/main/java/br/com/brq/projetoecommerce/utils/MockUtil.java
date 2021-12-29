@@ -1,5 +1,6 @@
 package br.com.brq.projetoecommerce.utils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,7 +105,7 @@ public class MockUtil {
 		.celular("11222223333")
 		.telefone("22223333")
 		.email("boladinhos@gmail.com")
-		.dataDeNascimento("1998, 05, 18").enderecos(listDto)
+		.dataDeNascimento(LocalDate.of(1998, 05, 18)).enderecos(listDto)
 		.build());
 		return enty.toDTO();
 		}

@@ -28,12 +28,6 @@
 			src/main/java/**/domain/**,
 			src/main/java/**/utils/**,
 			src/main/java/**/exceptions/**,
-			src/main/java/br/com/brq/projetoecommerce/repositories/UsuarioRepository.java,
-			src/main/java/br/com/brq/projetoecommerce/repositories/EnderecoRepository.java,
-			src/main/java/br/com/brq/projetoecommerce/controllers/UsuarioController.java,
-			src/main/java/br/com/brq/projetoecommerce/controllers/EnderecoController.java,
-			src/main/java/br/com/brq/projetoecommerce/services/UsuarioService.java,
-			src/main/java/br/com/brq/projetoecommerce/services/EnderecoService.java,
 			src/main/java/br/com/brq/projetoecommerce/ProjetoEcommerceApplication.java
 		</sonar.exclusions>
 

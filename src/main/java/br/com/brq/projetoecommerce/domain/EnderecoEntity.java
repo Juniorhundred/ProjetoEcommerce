@@ -45,4 +45,5 @@ public class EnderecoEntity implements Serializable {
 		var mapper = new ModelMapper();
 		return mapper.map(this, EnderecoDTO.class);
 	}
+}
 
