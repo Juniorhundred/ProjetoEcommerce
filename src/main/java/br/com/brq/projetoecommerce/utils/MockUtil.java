@@ -4,15 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import br.com.brq.projetoecommerce.domain.CategoriaEntity;
+import br.com.brq.projetoecommerce.domain.EnderecoEntity;
+import br.com.brq.projetoecommerce.domain.ImagemEntity;
+import br.com.brq.projetoecommerce.domain.ItemVendaEntity;
+import br.com.brq.projetoecommerce.domain.ProdutoEntity;
+import br.com.brq.projetoecommerce.domain.UsuarioEntity;
+import br.com.brq.projetoecommerce.domain.VendaEntity;
 import br.com.brq.projetoecommerce.dto.CategoriaDTO;
+import br.com.brq.projetoecommerce.dto.EnderecoDTO;
 import br.com.brq.projetoecommerce.dto.ImagemDTO;
 import br.com.brq.projetoecommerce.dto.ItemVendaDTO;
 import br.com.brq.projetoecommerce.dto.ProdutoDTO;
+import br.com.brq.projetoecommerce.dto.UsuarioDTO;
 import br.com.brq.projetoecommerce.dto.VendaDTO;
 import br.com.brq.projetoecommerce.services.CategoriaService;
+import br.com.brq.projetoecommerce.services.EnderecoService;
+import br.com.brq.projetoecommerce.services.ImagemService;
+import br.com.brq.projetoecommerce.services.ItemVendaService;
 import br.com.brq.projetoecommerce.services.ProdutoService;
+import br.com.brq.projetoecommerce.services.UsuarioService;
+import br.com.brq.projetoecommerce.services.VendaService;
 
+@Component
 public class MockUtil {
 	
 	@Autowired
@@ -21,54 +37,119 @@ public class MockUtil {
 	@Autowired
 	private ProdutoService produtoService;
 	
-	public CategoriaDTO categoriaMock() {
+	@Autowired
+	private ImagemService imagemService;
+	
+	@Autowired
+	private ItemVendaService itemVendaService;
+	
+	@Autowired
+	private VendaService vendaService;
+	
+	@Autowired
+	private UsuarioService usuarioService;
+	
+	@Autowired
+	private EnderecoService enderecoService;
+	
+	
+	
+	public CategoriaDTO categoriaControllerMock() {
 		
-		CategoriaDTO categoriaMocka = CategoriaDTO.builder().nomeCategoria("Eletronicos").build();		
-		return categoriaMocka;
+		CategoriaEntity categoriaMocka = categoriaService.salvar(CategoriaEntity.builder().nomeCategoria("Eletronicos").build());		
+		return categoriaMocka.toDTO();
 	}
 	
-	public ImagemDTO imagemMock() {
+	public ImagemDTO imagemControllerMock() {
 		
-		ImagemDTO imagemMock = ImagemDTO.builder().imagemProduto("(*-*)").build();
-		
-		return imagemMock;
+		ImagemEntity imagemMock = imagemService.salvar(ImagemEntity.builder().imagemProduto("(*-*)").build());		
+		return imagemMock.toDTO();
 	}
 	
-	public ProdutoDTO produtoMock(List<CategoriaDTO> cat, List<ImagemDTO> ima) {
+	public ProdutoDTO produtoControllerMock() {
 		
-		CategoriaDTO categoriaMock = this.categoriaMock();
-		//categoriaService.salvar(categoriaMock.toEntity());
-		List<CategoriaDTO> listCategoria = new ArrayList<>();
-		listCategoria.add(categoriaMock);
+		CategoriaDTO categoriaMock = this.categoriaControllerMock();
+	    
+		List<CategoriaEntity> listCat = new ArrayList<>();
+		listCat.add(categoriaMock.toEntity());
 		
-		ImagemDTO imagemMock =  this.imagemMock();
-		List<ImagemDTO> listImagem = new ArrayList<>();
-		listImagem.add(imagemMock);
+		ImagemDTO imagemMock =  this.imagemControllerMock();		
 		
-		ProdutoDTO produtoMock = ProdutoDTO.builder().nome("Xiaomi").preco(2000).descricao("Celular").categorias(cat).imagens(ima).build();
-					
-		return produtoMock;
+		List<ImagemEntity> listIma = new ArrayList<>();
+		listIma.add(imagemMock.toEntity());
+		
+		ProdutoEntity produtoMock = produtoService.salvar(ProdutoEntity.builder().nome("Xiaomi").preco(2000).descricao("Celular")
+				.categorias(listCat).imagens(listIma).build());	
+		
+		return produtoMock.toDTO();
 	}
 	
-	public ItemVendaDTO itemMock(List<ProdutoDTO> prod) {
+	public ItemVendaDTO itemControllerMock() {
 		
-//		ProdutoDTO produtoMock = this.produtoMock();		
-//		List<ProdutoDTO> listProduto = new ArrayList<>();
-//		listProduto.add(produtoMock);
+		ProdutoDTO produtoMock = this.produtoControllerMock();	
+		List<ProdutoEntity> listProd = new ArrayList<>();
+		listProd.add(produtoMock.toEntity());
 		
-		ItemVendaDTO itemMock = ItemVendaDTO.builder().itemQuantidade(1).itemProduto(prod).build();
+		ItemVendaEntity itemMock = itemVendaService.salvar(ItemVendaEntity.builder().itemQuantidade(1).itemProduto(listProd).build());
 		
-		return itemMock;
+		return itemMock.toDTO();
 	}
 	
-	public VendaDTO vendaMock() {
+	private UsuarioDTO usuarioMock() {
+		EnderecoDTO dto = enderecoMock();
+		List<EnderecoEntity> listDto = new ArrayList<>();
+		listDto.add(dto.toEntity());
+		UsuarioEntity enty = usuarioService.salvar(UsuarioEntity.builder().nome("Karina")
+		.cpf("12345678911")
+		.celular("11222223333")
+		.telefone("22223333")
+		.email("boladinhos@gmail.com")
+		.dataDeNascimento("1998, 05, 18").enderecos(listDto)
+		.build());
+		return enty.toDTO();
+		}
+	
+	private EnderecoDTO enderecoMock() {
+		EnderecoEntity enty = enderecoService.salvar(EnderecoEntity.builder()
+				.enderecoId(1)
+				.logradouro("Rua do Anderson").numero("55").complemento("ap 12").cep("91234-567")
+				.cidade("Cidade do Anderson").bairro("Bairro dos boladinhos").estado("estado laico").build());	
 		
-		ItemVendaDTO itemMock = this.itemMock(null);
-		List<ItemVendaDTO> listItem = new ArrayList<>();
-		listItem.add(itemMock);
+		return enty.toDTO();		
+		}
+	
+	public VendaDTO vendaControllerMock() {
 		
-		VendaDTO vendaMock = VendaDTO.builder().dataVenda("24-12-2021").itens(listItem).build();
+		ItemVendaDTO itemMock = this.itemControllerMock();
+		List<ItemVendaEntity> listItem = new ArrayList<>();
+		listItem.add(itemMock.toEntity());
+		
+		UsuarioDTO uDto = usuarioMock();
+		UsuarioEntity uEnty = uDto.toEntity();
+		
+		VendaEntity vendaMock = vendaService.salvar(VendaEntity.builder().dataVenda("24-12-2021").itens(listItem).usuario(uEnty).build());
 			
-		return vendaMock;
+		return vendaMock.toDTO();
+	}
+	
+	public CategoriaEntity categoriaMock() {
+		return CategoriaEntity.builder().nomeCategoria("Eletronico").build();
+	}
+	
+	public ImagemEntity imagemMock() {
+		return ImagemEntity.builder().imagemProduto("nlousafvcijiuasfv").build();
+	}
+	
+
+	public ItemVendaEntity itemVendaMock() {
+		return ItemVendaEntity.builder().idItemVenda(2).itemQuantidade(1).build();
+	}
+	
+	public ProdutoEntity produtoMock() {
+		return ProdutoEntity.builder().nome("Xiaomi").preco(2000).descricao("Celular Chines").build();
+	}
+	
+	public VendaEntity vendaMock() {
+		return VendaEntity.builder().build(); 
 	}
 }

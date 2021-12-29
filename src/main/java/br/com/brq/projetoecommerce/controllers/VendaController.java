@@ -35,7 +35,7 @@ public class VendaController {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<VendaDTO> buscarId(@Valid @PathVariable("id") Integer id){
+	public ResponseEntity<VendaDTO> buscarId(@PathVariable("id") Integer id){
 		VendaEntity enty = vendaService.buscarVendaId(id);
 		VendaDTO dto = enty.toDTO();
 		return ResponseEntity.ok().body(dto);

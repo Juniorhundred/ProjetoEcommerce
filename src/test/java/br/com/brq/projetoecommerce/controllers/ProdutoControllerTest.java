@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,30 +22,29 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.brq.projetoecommerce.domain.ProdutoEntity;
 import br.com.brq.projetoecommerce.dto.ProdutoDTO;
-import br.com.brq.projetoecommerce.services.ProdutoService;
+import br.com.brq.projetoecommerce.exceptions.ValidationError;
+import br.com.brq.projetoecommerce.utils.MockUtil;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProdutoControllerTest {
+class ProdutoControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
 	
 	@Autowired
-	private ProdutoService produtoService;
-
+	private MockUtil mockUtil;
+	
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Test
 	void buscarIdTest() throws Exception {
 		
-		ProdutoDTO dto = this.createValidProduto();
-		ProdutoEntity enty = produtoService.salvar(dto.toEntity());				
+		ProdutoDTO dto = this.mockUtil.produtoControllerMock();			
 
-		ResultActions response = mockMvc.perform(get("/produtos/"+ enty.getIdProduto()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+		ResultActions response = mockMvc.perform(get("/produtos/"+ dto.getIdProduto()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
@@ -52,10 +53,9 @@ public class ProdutoControllerTest {
 		ProdutoDTO produtoDTO = objectMapper.readValue(resultStr, ProdutoDTO.class);
 	
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(produtoDTO.getIdProduto()).isEqualTo(enty.getIdProduto());
+		assertThat(produtoDTO.getIdProduto()).isEqualTo(dto.getIdProduto());
 
-	}	
-	
+	}
 	
 	@Test
 	void buscarTodosProdutosTest() throws Exception {
@@ -73,7 +73,7 @@ public class ProdutoControllerTest {
 	
 	@Test
 	void cadastrarTest() throws JsonProcessingException, Exception {
-		ProdutoDTO dto = this.createValidProduto();
+		ProdutoDTO dto = this.mockUtil.produtoControllerMock();
 
 		ResultActions response = mockMvc.perform(
 				post("/produtos").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
@@ -92,46 +92,117 @@ public class ProdutoControllerTest {
 		assertThat(dtoResult.getImagens()).isEqualTo(dto.getImagens());
 	}
 	
+	@Test
+	void cadastrarProdutoNomeNullTest() throws JsonProcessingException, Exception {
+		ProdutoDTO dto = this.mockUtil.produtoControllerMock();
+		dto.setNome(null);
+
+	
+		ResultActions response = mockMvc.perform(
+				post("/produtos").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+	
+	@Test
+	void cadastrarProdutoDescricaoNullTest() throws JsonProcessingException, Exception {
+		ProdutoDTO dto = this.mockUtil.produtoControllerMock();
+		dto.setDescricao(null);
+
+	
+		ResultActions response = mockMvc.perform(
+				post("/produtos").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+	
+	@Test
+	void cadastrarProdutoCategoriaNullTest() throws JsonProcessingException, Exception {
+		ProdutoDTO dto = this.mockUtil.produtoControllerMock();
+		dto.setCategorias(null);
+
+	
+		ResultActions response = mockMvc.perform(
+				post("/produtos").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+	
+	@Test
+	void cadastrarProdutoImagensNullTest() throws JsonProcessingException, Exception {
+		ProdutoDTO dto = this.mockUtil.produtoControllerMock();
+		dto.setImagens(null);
+
+	
+		ResultActions response = mockMvc.perform(
+				post("/produtos").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+	
 	@Test	
 	void alterarTest() throws Exception {
-		ProdutoDTO dto = this.createValidProduto();
-
-		int id = 1;
-
+		ProdutoDTO dto = this.mockUtil.produtoControllerMock();
 		ResultActions response = mockMvc.perform(
-				put("/produtos/" + id).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
-
+				put("/produtos/" + dto.getIdProduto()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 		MvcResult result = response.andReturn();
 
 		String resultStr = result.getResponse().getContentAsString();
 
 		ProdutoDTO updated = objectMapper.readValue(resultStr, ProdutoDTO.class);
 
-		assertThat(updated.getIdProduto()).isEqualTo(id);
+		assertThat(updated.getIdProduto()).isEqualTo(dto.getIdProduto());
 		assertThat(updated.getNome()).isEqualTo(dto.getNome());
 		assertThat(updated.getPreco()).isEqualTo(dto.getPreco());
 		assertThat(updated.getDescricao()).isEqualTo(dto.getDescricao());
-		//assertThat(updated.getCategorias()).isEmpty();
-		//assertThat(updated.getImagens()).isEmpty();
-
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 
 	}
 	
 	@Test	
 	void deleteTest() throws Exception {
-		int id = 1;
+		ProdutoDTO dto = this.mockUtil.produtoControllerMock();
 
-		ResultActions response = mockMvc.perform(delete("/produtos/" + id).contentType("application/json"));
+		ResultActions response = mockMvc.perform(delete("/produtos/" + dto.getIdProduto()).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-	}
-	
-	private ProdutoDTO createValidProduto() {	
-		
-		ProdutoDTO dto = ProdutoDTO.builder().nome("Xiaomi").preco(2000).descricao("Celular").build();
-		return dto;
 	}
 }

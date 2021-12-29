@@ -16,7 +16,7 @@ import br.com.brq.projetoecommerce.domain.ImagemEntity;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class ImagemRepositoryTest {
+class ImagemRepositoryTest {
 
 	@Autowired
 	private ImagemRepository imagemRepository;

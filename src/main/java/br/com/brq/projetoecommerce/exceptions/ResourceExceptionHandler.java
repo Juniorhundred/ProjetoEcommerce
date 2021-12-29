@@ -21,7 +21,7 @@ public class ResourceExceptionHandler {
 	public ResponseEntity<StandardError> methodArgumentNotValidException
 			(MethodArgumentNotValidException e, HttpServletRequest request){
 		
-		ValidationError ve = new ValidationError(
+				var ve = new ValidationError(
 				new Date(),
 				HttpStatus.UNPROCESSABLE_ENTITY.value(),
 				"Erro de Validação",

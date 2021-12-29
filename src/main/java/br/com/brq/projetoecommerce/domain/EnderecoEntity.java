@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.modelmapper.ModelMapper;
@@ -33,7 +34,10 @@ private static final long serialVersionUID = 1430541589979579078L;
 
 
 @Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
+@GeneratedValue (strategy = GenerationType.SEQUENCE, 
+generator = "ENDERECO_GEN_SEQ")
+@SequenceGenerator (sequenceName = "ENDERECO_SEQ", allocationSize = 1, 
+name = "ENDERECO_GEN_SEQ")
 private Integer enderecoId;
 private String logradouro;
 private String numero;

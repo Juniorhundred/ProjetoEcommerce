@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,32 +23,29 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.brq.projetoecommerce.dto.CategoriaDTO;
-import br.com.brq.projetoecommerce.services.CategoriaService;
+import br.com.brq.projetoecommerce.exceptions.ValidationError;
 import br.com.brq.projetoecommerce.utils.MockUtil;
-
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CategoriaControllerTest {
-	
+ class CategoriaControllerTest {
+
 	@Autowired
 	private MockMvc mockMvc;
-	
-	@Autowired
-	private CategoriaService categoriaService;
 
-	private MockUtil mockUtil = new MockUtil();
-	
+	@Autowired
+	private MockUtil mockUtil;
+
 	private ObjectMapper objectMapper = new ObjectMapper();
-	
+
 	@Test
 	void buscarIdTest() throws Exception {
-		
-		CategoriaDTO dto = mockUtil.categoriaMock();
-		categoriaService.salvar(dto.toEntity());		 		
-		
-		ResultActions response = mockMvc.perform(get("/categorias/1").contentType("application/json"));
+
+		CategoriaDTO dto = mockUtil.categoriaControllerMock();
+
+		ResultActions response = mockMvc.perform(get("/categorias/" + dto.getIdCategoria())
+				.content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 		MvcResult result = response.andReturn();
 
 		String resultStr = result.getResponse().getContentAsString();
@@ -54,22 +53,18 @@ public class CategoriaControllerTest {
 		CategoriaDTO professorDTO = objectMapper.readValue(resultStr, CategoriaDTO.class);
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(professorDTO.getIdCategoria()).isEqualTo(1);
+		assertThat(professorDTO.getIdCategoria()).isEqualTo(dto.getIdCategoria());
 
 	}
-	
+
 	@Test
 	void buscarTodasCategoriasTest() throws Exception {
-		
-		CategoriaDTO dto = mockUtil.categoriaMock();
-		categoriaService.salvar(dto.toEntity());
-		
-		System.out.println(dto);
 
-		ResultActions response = mockMvc.perform(get("/categorias").contentType("application/json"));
+		CategoriaDTO dto = mockUtil.categoriaControllerMock();
+
+		ResultActions response = mockMvc.perform(
+				get("/categorias").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 		MvcResult result = response.andReturn();
-		
-		System.out.println(response);
 
 		String resultStr = result.getResponse().getContentAsString();
 
@@ -78,10 +73,10 @@ public class CategoriaControllerTest {
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertThat(list.length > 0).isTrue();
 	}
-	
+
 	@Test
 	void cadastrarTest() throws JsonProcessingException, Exception {
-		CategoriaDTO dto = mockUtil.categoriaMock();
+		CategoriaDTO dto = mockUtil.categoriaControllerMock();
 
 		ResultActions response = mockMvc.perform(
 				post("/categorias").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
@@ -94,17 +89,36 @@ public class CategoriaControllerTest {
 
 		assertThat(dtoResult.getIdCategoria() > 0).isTrue();
 		assertThat(dtoResult.getNomeCategoria()).isEqualTo(dto.getNomeCategoria());
-		
+
 	}
+
+	@Test
+	void cadastrarCategoriaNullTest() throws JsonProcessingException, Exception {
+		CategoriaDTO dto = this.mockUtil.categoriaControllerMock();
+		dto.setNomeCategoria(null);
+
 	
-	@Test	
-	void alterarTest() throws Exception {
-		CategoriaDTO dto = mockUtil.categoriaMock();
-
-		int id = 1;
-
 		ResultActions response = mockMvc.perform(
-				put("/categorias/" + id).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+				post("/categorias").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+
+	@Test
+	void alterarTest() throws Exception {
+		CategoriaDTO dto = mockUtil.categoriaControllerMock();
+
+		ResultActions response = mockMvc.perform(put("/categorias/" + dto.getIdCategoria())
+				.content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
@@ -112,25 +126,21 @@ public class CategoriaControllerTest {
 
 		CategoriaDTO updated = objectMapper.readValue(resultStr, CategoriaDTO.class);
 
-		assertThat(updated.getIdCategoria()).isEqualTo(id);
+		assertThat(updated.getIdCategoria()).isEqualTo(dto.getIdCategoria());
 		assertThat(updated.getNomeCategoria()).isEqualTo(dto.getNomeCategoria());
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 
 	}
-	
-	@Test	
-	void deleteTest() throws Exception {
-		int id = 2;
 
-		ResultActions response = mockMvc.perform(delete("/categorias/" + id).contentType("application/json"));
+	@Test
+	void deleteTest() throws Exception {
+		CategoriaDTO dto = mockUtil.categoriaControllerMock();
+
+		ResultActions response = mockMvc
+				.perform(delete("/categorias/" + dto.getIdCategoria()).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-	}
-	
-	private CategoriaDTO createValidCategoria() {			
-		CategoriaDTO dto = CategoriaDTO.builder().nomeCategoria("Eletronicos").build();
-		return dto;
 	}
 }

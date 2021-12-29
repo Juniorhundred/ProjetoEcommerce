@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +20,20 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.brq.projetoecommerce.domain.ImagemEntity;
+import br.com.brq.projetoecommerce.exceptions.ObjetoNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.ImagemRepository;
+import br.com.brq.projetoecommerce.utils.MockUtil;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ImagemServiceTest {
+class ImagemServiceTest {
 	
 	@Autowired
 	private ImagemService imagemService;
+	
+	@Autowired
+	private MockUtil mockUtil;
 
 	@MockBean
 	private ImagemRepository imagemRepository;
@@ -39,7 +43,7 @@ public class ImagemServiceTest {
 
 		List<ImagemEntity> listMock = new ArrayList<>();
 
-		ImagemEntity imagem = this.createValidImagem();
+		ImagemEntity imagem = this.mockUtil.imagemMock();
 		listMock.add(imagem);
 
 		when(imagemRepository.findAll()).thenReturn(listMock);
@@ -51,11 +55,11 @@ public class ImagemServiceTest {
 	}
 	
 	@Test
-	void savarTest() {
+	void salvarTest() {
 
 		int id = 1;
 
-		ImagemEntity imagem = createValidImagem();
+		ImagemEntity imagem = this.mockUtil.imagemMock();
 
 		when(imagemRepository.save(imagem)).thenReturn(imagem);
 
@@ -72,7 +76,7 @@ public class ImagemServiceTest {
 	void buscarImagemIdSucessoTest() {
 		
 		int id = 1;
-		ImagemEntity imagem = this.createValidImagem();
+		ImagemEntity imagem = this.mockUtil.imagemMock();
 		Optional<ImagemEntity> optional = Optional.of(imagem);
 
 		when(imagemRepository.findById(id)).thenReturn(optional);
@@ -90,14 +94,14 @@ public class ImagemServiceTest {
 		Optional<ImagemEntity> optional = Optional.empty();
 		when(imagemRepository.findById(id)).thenReturn(optional);
 
-		assertThrows(ObjectNotFoundException.class, () -> this.imagemService.buscarImagemId(id));
+		assertThrows(ObjetoNaoEncontradoException.class, () -> this.imagemService.buscarImagemId(id));
 	}	
 
 	@Test
 	void alterarSucessoTest() {
 		
 		int idImagem = 1;
-		ImagemEntity imagem = this.createValidImagem();
+		ImagemEntity imagem = this.mockUtil.imagemMock();
 		imagem.setIdImagem(idImagem);
 
 		when(imagemRepository.findById(idImagem)).thenReturn(Optional.of(imagem));
@@ -114,12 +118,12 @@ public class ImagemServiceTest {
 	void alterarFalhaTest() {
 		
 		int idImagem = 1;
-		ImagemEntity imagem = this.createValidImagem();
+		ImagemEntity imagem = this.mockUtil.imagemMock();
 		imagem.setIdImagem(idImagem);
 
 		when(imagemRepository.findById(idImagem)).thenReturn(Optional.empty());
 
-		assertThrows(ObjectNotFoundException.class, () -> this.imagemService.alterar(idImagem, imagem));
+		assertThrows(ObjetoNaoEncontradoException.class, () -> this.imagemService.alterar(idImagem, imagem));
 	}
 
 	@Test
@@ -130,10 +134,4 @@ public class ImagemServiceTest {
 		assertDoesNotThrow(() -> imagemService.deletar(idImagem));
 		verify(imagemRepository, times(1)).deleteById(idImagem);
 	}	
-
-
-	private ImagemEntity createValidImagem() {
-		return ImagemEntity.builder().imagemProduto("nlousafvcijiuasfv").build();
-	}
-
 }

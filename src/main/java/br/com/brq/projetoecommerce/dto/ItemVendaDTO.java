@@ -20,10 +20,10 @@ public class ItemVendaDTO {
 
 	private Integer idItemVenda; 
 	
-	//@NotNull(message = "Campo quantidade é obrigatório.")
+	@NotNull(message = "Campo quantidade é obrigatório.")
 	private Integer itemQuantidade;
 	
-	//@NotNull(message = "Campo produto é obrigatório.")
+	@NotNull(message = "Campo produto é obrigatório.")
 	private List <ProdutoDTO> itemProduto;
 	
 	public ItemVendaEntity toEntity() {

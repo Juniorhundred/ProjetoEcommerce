@@ -18,7 +18,7 @@ public class CategoriaDTO {
 
 	private Integer idCategoria;
 	
-	//@NotNull(message = "Campo nome é obrigatório.")
+	@NotNull(message = "Campo nome é obrigatório.")
 	private String nomeCategoria;
 
 	public CategoriaEntity toEntity() {

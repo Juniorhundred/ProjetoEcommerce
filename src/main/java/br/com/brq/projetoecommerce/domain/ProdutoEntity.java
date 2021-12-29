@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.modelmapper.ModelMapper;
@@ -32,19 +33,22 @@ public class ProdutoEntity implements Serializable {
 	private static final long serialVersionUID = 1581475916977624272L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue (strategy = GenerationType.SEQUENCE, 
+	generator = "PRODUTO_GEN_SEQ")
+	@SequenceGenerator (sequenceName = "PRODUTO_SEQ", allocationSize = 1, 
+	name = "PRODUTO_GEN_SEQ")
 	private Integer idProduto; 
 	private String nome; 
 	private double preco; 
 	private String descricao; 
 		
-	@ManyToMany//(cascade = CascadeType.ALL)
+	@ManyToMany
 	@JoinTable(name= "REL_PRODUTO_CATEGORIA", 
 		joinColumns = {@JoinColumn(name = "idProduto")},
 		inverseJoinColumns = {@JoinColumn(name = "idCategoria")})
 	private List<CategoriaEntity> categorias;
 	
-	@OneToMany//(cascade = CascadeType.REMOVE)	
+	@OneToMany	
 	private List<ImagemEntity> imagens;
 
 	public ProdutoDTO toDTO() {
