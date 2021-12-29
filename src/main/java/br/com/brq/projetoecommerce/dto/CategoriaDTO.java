@@ -24,6 +24,8 @@ public class CategoriaDTO {
 	public CategoriaEntity toEntity() {
 		var mapper = new ModelMapper();
 		return mapper.map(this, CategoriaEntity.class);
+		
+		
 
 	}
 }
