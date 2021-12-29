@@ -1,6 +1,5 @@
 package br.com.brq.projetoecommerce.dto;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class UsuarioDTO {
 	@NotNull(message = "Campo obrigatório")
 
 	private String cpf;
-	private LocalDate dataDeNascimento;
+	private String dataDeNascimento;
 	private String celular;
 	private String telefone;
 	private String email;

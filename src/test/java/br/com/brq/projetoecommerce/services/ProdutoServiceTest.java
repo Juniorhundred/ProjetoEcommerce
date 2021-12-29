@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +20,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.brq.projetoecommerce.domain.ProdutoEntity;
+import br.com.brq.projetoecommerce.exceptions.ObjetoNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.ProdutoRepository;
+import br.com.brq.projetoecommerce.utils.MockUtil;
 
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProdutoServiceTest {
+class ProdutoServiceTest {
 	
 	@Autowired
 	private ProdutoService produtoService;
+	
+	@Autowired
+	private MockUtil mockUtil;
 
 	@MockBean
 	private ProdutoRepository produtoRepository;
@@ -40,7 +44,7 @@ public class ProdutoServiceTest {
 
 		List<ProdutoEntity> listMock = new ArrayList<>();
 
-		ProdutoEntity produto = this.createValidProduto();
+		ProdutoEntity produto = this.mockUtil.produtoMock();
 		listMock.add(produto);
 
 		when(produtoRepository.findAll()).thenReturn(listMock);
@@ -52,11 +56,11 @@ public class ProdutoServiceTest {
 	}
 	
 	@Test
-	void savarTest() {
+	void salvarTest() {
 
 		int id = 1;
 
-		ProdutoEntity produto = createValidProduto();
+		ProdutoEntity produto = this.mockUtil.produtoMock();
 
 		when(produtoRepository.save(produto)).thenReturn(produto);
 
@@ -74,7 +78,7 @@ public class ProdutoServiceTest {
 	void buscarProdutoIdSucessoTest() {
 		
 		int id = 1;
-		ProdutoEntity produto = this.createValidProduto();
+		ProdutoEntity produto = this.mockUtil.produtoMock();
 		Optional<ProdutoEntity> optional = Optional.of(produto);
 
 		when(produtoRepository.findById(id)).thenReturn(optional);
@@ -94,14 +98,14 @@ public class ProdutoServiceTest {
 		Optional<ProdutoEntity> optional = Optional.empty();
 		when(produtoRepository.findById(id)).thenReturn(optional);
 
-		assertThrows(ObjectNotFoundException.class, () -> this.produtoService.buscarProdutoId(id));
+		assertThrows(ObjetoNaoEncontradoException.class, () -> this.produtoService.buscarProdutoId(id));
 	}	
 
 	@Test
 	void alterarSucessoTest() {
 		
 		int idProduto = 1;
-		ProdutoEntity produto = this.createValidProduto();
+		ProdutoEntity produto = this.mockUtil.produtoMock();
 		produto.setIdProduto(idProduto);
 
 		when(produtoRepository.findById(idProduto)).thenReturn(Optional.of(produto));
@@ -120,12 +124,12 @@ public class ProdutoServiceTest {
 	void alterarFalhaTest() {
 		
 		int idProduto = 1;
-		ProdutoEntity produto = this.createValidProduto();
+		ProdutoEntity produto = this.mockUtil.produtoMock();
 		produto.setIdProduto(idProduto);
 
 		when(produtoRepository.findById(idProduto)).thenReturn(Optional.empty());
 
-		assertThrows(ObjectNotFoundException.class, () -> this.produtoService.alterar(idProduto, produto));
+		assertThrows(ObjetoNaoEncontradoException.class, () -> this.produtoService.alterar(idProduto, produto));
 	}
 
 	@Test
@@ -136,10 +140,4 @@ public class ProdutoServiceTest {
 		assertDoesNotThrow(() -> produtoService.deletar(idProduto));
 		verify(produtoRepository, times(1)).deleteById(idProduto);
 	}	
-
-
-	private ProdutoEntity createValidProduto() {
-		return ProdutoEntity.builder().nome("Xiaomi").preco(2000).descricao("Celular Chines").build();
-	}
-
 }

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +20,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.brq.projetoecommerce.domain.VendaEntity;
+import br.com.brq.projetoecommerce.exceptions.ObjetoNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.VendaRepository;
+import br.com.brq.projetoecommerce.utils.MockUtil;
 
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class VendaServiceTest {
+class VendaServiceTest {
 	
 	@Autowired
 	private VendaService vendaService;
+	
+	@Autowired
+	private MockUtil mockUtil;
 
 	@MockBean
 	private VendaRepository vendaRepository;
@@ -40,7 +44,7 @@ public class VendaServiceTest {
 
 		List<VendaEntity> listMock = new ArrayList<>();
 
-		VendaEntity venda = this.createValidVenda();
+		VendaEntity venda = this.mockUtil.vendaMock();
 		listMock.add(venda);
 
 		when(vendaRepository.findAll()).thenReturn(listMock);
@@ -52,11 +56,11 @@ public class VendaServiceTest {
 	}
 	
 	@Test
-	void savarTest() {
+	void salvarTest() {
 
 		int id = 1;
 
-		VendaEntity venda = createValidVenda();
+		VendaEntity venda = this.mockUtil.vendaMock();
 
 		when(vendaRepository.save(venda)).thenReturn(venda);
 
@@ -72,7 +76,7 @@ public class VendaServiceTest {
 	void buscarVendaIdSucessoTest() {
 		
 		int id = 1;
-		VendaEntity venda = this.createValidVenda();
+		VendaEntity venda = this.mockUtil.vendaMock();
 		Optional<VendaEntity> optional = Optional.of(venda);
 
 		when(vendaRepository.findById(id)).thenReturn(optional);
@@ -90,14 +94,14 @@ public class VendaServiceTest {
 		Optional<VendaEntity> optional = Optional.empty();
 		when(vendaRepository.findById(id)).thenReturn(optional);
 
-		//assertThrows(ObjectNotFoundException.class, () -> this.vendaService.buscarVendaId(id));
+		assertThrows(ObjetoNaoEncontradoException.class, () -> this.vendaService.buscarVendaId(id));
 	}	
 
 	@Test
 	void alterarSucessoTest() {
 		
 		int idVenda = 1;
-		VendaEntity venda = this.createValidVenda();
+		VendaEntity venda = this.mockUtil.vendaMock();
 		venda.setIdVenda(idVenda);
 
 		when(vendaRepository.findById(idVenda)).thenReturn(Optional.of(venda));
@@ -113,12 +117,12 @@ public class VendaServiceTest {
 	void alterarFalhaTest() {
 		
 		int idVenda = 1;
-		VendaEntity venda = this.createValidVenda();
+		VendaEntity venda = this.mockUtil.vendaMock();
 		venda.setIdVenda(idVenda);
 
 		when(vendaRepository.findById(idVenda)).thenReturn(Optional.empty());
 
-		//assertThrows(ObjectNotFoundException.class, () -> this.vendaService.alterar(idVenda, venda));
+		assertThrows(ObjetoNaoEncontradoException.class, () -> this.vendaService.alterar(idVenda, venda));
 	}
 
 	@Test
@@ -129,10 +133,4 @@ public class VendaServiceTest {
 		assertDoesNotThrow(() -> vendaService.deletar(idVenda));
 		verify(vendaRepository, times(1)).deleteById(idVenda);
 	}	
-
-
-	private VendaEntity createValidVenda() {
-		return VendaEntity.builder().build();
-	}
-
 }

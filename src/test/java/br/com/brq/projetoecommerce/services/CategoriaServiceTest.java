@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,25 +20,30 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.brq.projetoecommerce.domain.CategoriaEntity;
+import br.com.brq.projetoecommerce.exceptions.ObjetoNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.CategoriaRepository;
+import br.com.brq.projetoecommerce.utils.MockUtil;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CategoriaServiceTest {
+class CategoriaServiceTest {
 
 	@Autowired
 	private CategoriaService categoriaService;
+	
+	@Autowired
+	private MockUtil mockUtil;
 
 	@MockBean
 	private CategoriaRepository categoriaRepository;
-
+	
 	@Test
 	void listaTodasCategoriasTest() {
 		
 		List<CategoriaEntity> listMock = new ArrayList<>();
 
-		CategoriaEntity categoria = this.createValidCategoria();
+		CategoriaEntity categoria = this.mockUtil.categoriaMock();
 		listMock.add(categoria);
 
 		when(categoriaRepository.findAll()).thenReturn(listMock);
@@ -51,11 +55,11 @@ public class CategoriaServiceTest {
 	}
 
 	@Test
-	void savarTest() {
+	void salvarTest() {
 
 		int id = 1;
 
-		CategoriaEntity categoria = createValidCategoria();
+		CategoriaEntity categoria = this.mockUtil.categoriaMock();
 
 		when(categoriaRepository.save(categoria)).thenReturn(categoria);
 
@@ -72,7 +76,7 @@ public class CategoriaServiceTest {
 	void buscarCategoriaIdSucessoTest() {
 
 		int id = 1;
-		CategoriaEntity categoria = this.createValidCategoria();
+		CategoriaEntity categoria = this.mockUtil.categoriaMock();
 		Optional<CategoriaEntity> optional = Optional.of(categoria);
 
 		when(categoriaRepository.findById(id)).thenReturn(optional);
@@ -90,14 +94,14 @@ public class CategoriaServiceTest {
 		Optional<CategoriaEntity> optional = Optional.empty();
 		when(categoriaRepository.findById(id)).thenReturn(optional);
 
-		assertThrows(ObjectNotFoundException.class, () -> this.categoriaService.buscarCategoriaId(id));
+		assertThrows(ObjetoNaoEncontradoException.class, () -> this.categoriaService.buscarCategoriaId(id));
 	}
 
 	@Test
 	void alterarSucessoTest() {
 
 		int idCategoria = 1;
-		CategoriaEntity categoria = this.createValidCategoria();
+		CategoriaEntity categoria = this.mockUtil.categoriaMock();
 		categoria.setIdCategoria(idCategoria);
 
 		when(categoriaRepository.findById(idCategoria)).thenReturn(Optional.of(categoria));
@@ -114,12 +118,12 @@ public class CategoriaServiceTest {
 	void alterarFalhaTest() {
 
 		int idCategoria = 1;
-		CategoriaEntity categoria = this.createValidCategoria();
+		CategoriaEntity categoria = this.mockUtil.categoriaMock();
 		categoria.setIdCategoria(idCategoria);
 
 		when(categoriaRepository.findById(idCategoria)).thenReturn(Optional.empty());
 
-		assertThrows(ObjectNotFoundException.class, () -> this.categoriaService.alterar(idCategoria, categoria));
+		assertThrows(ObjetoNaoEncontradoException.class, () -> this.categoriaService.alterar(idCategoria, categoria));
 	}
 
 	@Test
@@ -130,9 +134,4 @@ public class CategoriaServiceTest {
 		assertDoesNotThrow(() -> categoriaService.deletar(idCategoria));
 		verify(categoriaRepository, times(1)).deleteById(idCategoria);
 	}
-
-	private CategoriaEntity createValidCategoria() {
-		return CategoriaEntity.builder().nomeCategoria("Eletronico").build();
-	}
-
 }

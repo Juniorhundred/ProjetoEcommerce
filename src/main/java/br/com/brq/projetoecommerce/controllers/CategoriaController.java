@@ -3,6 +3,8 @@ package br.com.brq.projetoecommerce.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,14 +42,14 @@ public class CategoriaController {
 	}
 
 	@PostMapping
-	public ResponseEntity<CategoriaDTO> cadastra(@RequestBody CategoriaDTO dto) {
+	public ResponseEntity<CategoriaDTO> cadastra(@Valid @RequestBody CategoriaDTO dto) {
 		CategoriaEntity enty = categoriaService.salvar(dto.toEntity());
 		CategoriaDTO dtoSave = enty.toDTO();
 		return ResponseEntity.ok().body(dtoSave);
 	}
 
 	@PutMapping(value = "{id}")
-	public ResponseEntity<CategoriaDTO> alterar(@RequestBody CategoriaDTO dto, @PathVariable("id") int id) {
+	public ResponseEntity<CategoriaDTO> alterar(@Valid @RequestBody CategoriaDTO dto, @PathVariable("id") int id) {
 		CategoriaEntity enty = categoriaService.alterar(id, dto.toEntity());
 		return ResponseEntity.ok().body(enty.toDTO());
 	}

@@ -1,0 +1,26 @@
+#spring:
+#  datasource:
+#    password: 1234
+#    url: jdbc:h2:mem:db
+#    username: sa
+
+    
+spring:
+  batch:
+    job:
+      enabled: false
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    password: oracle
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: System
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle10gDialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        type: trace
+        use_sql_comments: true

@@ -3,6 +3,8 @@ package br.com.brq.projetoecommerce.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +42,7 @@ public class ImagemController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ImagemDTO> cadastrar(@RequestBody ImagemDTO dto) {
+	public ResponseEntity<ImagemDTO> cadastrar(@Valid @RequestBody ImagemDTO dto) {
 		ImagemEntity enty = imagemService.salvar(dto.toEntity());
 		ImagemDTO dtoSave = enty.toDTO();
 		return ResponseEntity.ok().body(dtoSave);
@@ -48,7 +50,7 @@ public class ImagemController {
 	}
 
 	@PutMapping(value = "{id}")
-	public ResponseEntity<ImagemDTO> alterar(@RequestBody ImagemDTO dto, @PathVariable("id") int id) {
+	public ResponseEntity<ImagemDTO> alterar(@Valid @RequestBody ImagemDTO dto, @PathVariable("id") int id) {
 
 		ImagemEntity enty = imagemService.alterar(id, dto.toEntity());
 

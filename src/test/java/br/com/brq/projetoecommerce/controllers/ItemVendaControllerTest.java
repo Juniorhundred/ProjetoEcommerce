@@ -6,8 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,51 +22,31 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.brq.projetoecommerce.domain.ItemVendaEntity;
-import br.com.brq.projetoecommerce.domain.ProdutoEntity;
-import br.com.brq.projetoecommerce.dto.CategoriaDTO;
-import br.com.brq.projetoecommerce.dto.ImagemDTO;
 import br.com.brq.projetoecommerce.dto.ItemVendaDTO;
-import br.com.brq.projetoecommerce.dto.ProdutoDTO;
-import br.com.brq.projetoecommerce.services.CategoriaService;
-import br.com.brq.projetoecommerce.services.ImagemService;
-import br.com.brq.projetoecommerce.services.ItemVendaService;
-import br.com.brq.projetoecommerce.services.ProdutoService;
+import br.com.brq.projetoecommerce.exceptions.ValidationError;
 import br.com.brq.projetoecommerce.utils.MockUtil;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ItemVendaControllerTest {
+class ItemVendaControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Autowired
-	private ItemVendaService itemVendaService;
-
-	@Autowired
-	private ProdutoService produtoService;
-
-	@Autowired
-	private CategoriaService categoriaService;
-
-	@Autowired
-	private ImagemService imagemService;
-
-	private MockUtil mockUtil = new MockUtil();
+	private MockUtil mockUtil;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 
 	@Test
 	void buscarIdTest() throws Exception {
 
-		ItemVendaDTO dto = itemMock();
+		ItemVendaDTO dto = mockUtil.itemControllerMock();
 		
-		ItemVendaEntity prod = itemVendaService.salvar(dto.toEntity());
 
 		ResultActions response = mockMvc.perform(
-				get("/itemVenda/" + prod.getIdItemVenda()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+				get("/itemVenda/" + dto.getIdItemVenda()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
@@ -76,7 +55,7 @@ public class ItemVendaControllerTest {
 		ItemVendaDTO itemVendaDTO = objectMapper.readValue(resultStr, ItemVendaDTO.class);
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(itemVendaDTO.getIdItemVenda()).isEqualTo(prod.getIdItemVenda());
+		assertThat(itemVendaDTO.getIdItemVenda()).isEqualTo(dto.getIdItemVenda());
 
 	}
 
@@ -91,7 +70,7 @@ public class ItemVendaControllerTest {
 
 	@Test
 	void cadastrarTest() throws JsonProcessingException, Exception {
-		ItemVendaDTO dto = mockUtil.itemMock(null);
+		ItemVendaDTO dto = mockUtil.itemControllerMock();
 
 		ResultActions response = mockMvc.perform(
 				post("/itemVenda").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
@@ -108,14 +87,57 @@ public class ItemVendaControllerTest {
 	}
 
 	@Test
-	void alterarTest() throws Exception {
-		ItemVendaDTO dto = this.itemMock();
+	void cadastrarItemProdutoNullTest() throws JsonProcessingException, Exception {
+		ItemVendaDTO dto = this.mockUtil.itemControllerMock();
+		dto.setItemProduto(null);
 
-		int id = 1;
-		dto.setIdItemVenda(id);
+	
+		ResultActions response = mockMvc.perform(
+				post("/itemVenda").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+
+	@Test
+	void cadastrarItemQuantidadeNullTest() throws JsonProcessingException, Exception {
+		ItemVendaDTO dto = this.mockUtil.itemControllerMock();
+		dto.setItemQuantidade(null);
+
+	
+		ResultActions response = mockMvc.perform(
+				post("/itemVenda").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+
+	
+	@Test
+	void alterarTest() throws Exception {
+		ItemVendaDTO dto = this.mockUtil.itemControllerMock();
+
+		
+		dto.setIdItemVenda(dto.getIdItemVenda());
 
 		ResultActions response = mockMvc.perform(
-				put("/itemVenda/" + id).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+				put("/itemVenda/" + dto.getIdItemVenda()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
@@ -123,7 +145,7 @@ public class ItemVendaControllerTest {
 
 		ItemVendaDTO updated = objectMapper.readValue(resultStr, ItemVendaDTO.class);
 
-		assertThat(updated.getIdItemVenda()).isEqualTo(id);
+		assertThat(updated.getIdItemVenda()).isEqualTo(dto.getIdItemVenda());
 		assertThat(updated.getItemQuantidade() >= 0).isTrue();
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 
@@ -131,11 +153,11 @@ public class ItemVendaControllerTest {
 
 	@Test
 	void deleteTest() throws Exception {
-		ItemVendaDTO dto = this.itemMock();
+		ItemVendaDTO dto = this.mockUtil.itemControllerMock();
 
-		int id = 1;	
+			
 		
-		ResultActions response = mockMvc.perform(delete("/itemVenda/" + id).contentType("application/json"));
+		ResultActions response = mockMvc.perform(delete("/itemVenda/" + dto.getIdItemVenda()).contentType("application/json"));
 		
 //		ResultActions response = mockMvc.perform(
 //				delete("/itemVenda/" + id).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
@@ -145,56 +167,56 @@ public class ItemVendaControllerTest {
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 	}
-	
-	// novo metodo
-	private ItemVendaDTO itemMock() {
-		int id = 1;
-
-		CategoriaDTO cat = mockUtil.categoriaMock();		
-		cat.setIdCategoria(id);
-		List<CategoriaDTO> listCat = new ArrayList<>();
-		listCat.add(cat);
-
-		ImagemDTO ima = mockUtil.imagemMock();		
-		ima.setIdImagem(id);
-		List<ImagemDTO> listIma = new ArrayList<>();
-		listIma.add(ima);
-
-		ProdutoDTO prod = mockUtil.produtoMock(null, null);		
-		prod.setIdProduto(id);
-		List<ProdutoDTO> listProduto = new ArrayList<>();
-		listProduto.add(prod);
-
-		ItemVendaDTO dto = mockUtil.itemMock(null);	
-
-		return dto;
-	}
-
-	private ItemVendaDTO createValidFindId() {
-		int id = 1;
-
-		CategoriaDTO cat = mockUtil.categoriaMock();
-		categoriaService.salvar(cat.toEntity());
-		cat.setIdCategoria(id);
-		List<CategoriaDTO> listCat = new ArrayList<>();
-		listCat.add(cat);
-
-		ImagemDTO ima = mockUtil.imagemMock();
-		imagemService.salvar(ima.toEntity());
-		ima.setIdImagem(id);
-		List<ImagemDTO> listIma = new ArrayList<>();
-		listIma.add(ima);
-
-		ProdutoDTO prod = mockUtil.produtoMock(listCat, listIma);
-		produtoService.salvar(prod.toEntity());
-		prod.setIdProduto(id);
-		List<ProdutoDTO> listProduto = new ArrayList<>();
-		listProduto.add(prod);
-
-		ItemVendaDTO dto = mockUtil.itemMock(listProduto);
-		itemVendaService.salvar(dto.toEntity());
-
-		return dto;
-	}
-
 }
+
+	
+//	// novo metodo
+//	private ItemVendaDTO itemMock() {
+//		int id = 1;
+//
+//		CategoriaDTO cat = mockUtil.categoriaMock();		
+//		cat.setIdCategoria(id);
+//		List<CategoriaDTO> listCat = new ArrayList<>();
+//		listCat.add(cat);
+//
+//		ImagemDTO ima = mockUtil.imagemMock();		
+//		ima.setIdImagem(id);
+//		List<ImagemDTO> listIma = new ArrayList<>();
+//		listIma.add(ima);
+//
+//		ProdutoDTO prod = mockUtil.produtoMock(null, null);		
+//		prod.setIdProduto(id);
+//		List<ProdutoDTO> listProduto = new ArrayList<>();
+//		listProduto.add(prod);
+//
+//		ItemVendaDTO dto = mockUtil.itemMock(null);	
+//
+//		return dto;
+//	}
+//}
+
+//	private ItemVendaDTO createValidFindId() {
+//		int id = 1;
+//
+//		CategoriaDTO cat = mockUtil.categoriaMock();
+//		categoriaService.salvar(cat.toEntity());
+//		cat.setIdCategoria(id);
+//		List<CategoriaDTO> listCat = new ArrayList<>();
+//		listCat.add(cat);
+//
+//		ImagemDTO ima = mockUtil.imagemMock();
+//		imagemService.salvar(ima.toEntity());
+//		ima.setIdImagem(id);
+//		List<ImagemDTO> listIma = new ArrayList<>();
+//		listIma.add(ima);
+//
+//		ProdutoDTO prod = mockUtil.produtoMock(listCat, listIma);
+//		produtoService.salvar(prod.toEntity());
+//		prod.setIdProduto(id);
+//		List<ProdutoDTO> listProduto = new ArrayList<>();
+//		listProduto.add(prod);
+//
+//		ItemVendaDTO dto = mockUtil.itemMock(listProduto);
+//		itemVendaService.salvar(dto.toEntity());
+//
+//		return dto;

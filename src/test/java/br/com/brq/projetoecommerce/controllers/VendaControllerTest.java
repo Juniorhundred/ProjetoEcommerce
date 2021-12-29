@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +22,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.brq.projetoecommerce.domain.VendaEntity;
-import br.com.brq.projetoecommerce.dto.ItemVendaDTO;
-import br.com.brq.projetoecommerce.dto.ProdutoDTO;
 import br.com.brq.projetoecommerce.dto.VendaDTO;
-import br.com.brq.projetoecommerce.services.VendaService;
+import br.com.brq.projetoecommerce.exceptions.ValidationError;
+import br.com.brq.projetoecommerce.utils.MockUtil;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class VendaControllerTest {
+class VendaControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -37,16 +37,14 @@ public class VendaControllerTest {
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Autowired
-	private VendaService vendaService;
+	private MockUtil mockUtil;
 	
 	@Test
 	void BuscarIdVendaTest() throws Exception{
-		
-		VendaDTO dto = this.createValidVenda();
-		VendaEntity enty = vendaService.salvar(dto.toEntity());
+		VendaDTO dto = this.mockUtil.vendaControllerMock();
 
 		ResultActions response = mockMvc.perform(
-				get("/venda/" + enty.getIdVenda()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+				get("/venda/" + dto.getIdVenda()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 		
 		
 		MvcResult result = response.andReturn();
@@ -56,12 +54,12 @@ public class VendaControllerTest {
 		VendaDTO vendaDTO = objectMapper.readValue(resultStr, VendaDTO.class);
 	
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(vendaDTO.getIdVenda()).isEqualTo(enty.getIdVenda());
+		assertThat(vendaDTO.getIdVenda()).isEqualTo(dto.getIdVenda());
 		
 	}
-	
+
 	@Test
-	void buscarTodasImagensTest() throws Exception {
+	void buscarTodasVendasTest() throws Exception {
 
 		ResultActions response = mockMvc.perform(get("/venda").contentType("application/json"));
 		MvcResult result = response.andReturn();
@@ -76,7 +74,7 @@ public class VendaControllerTest {
 	
 	@Test
 	void cadastrarTest() throws JsonProcessingException, Exception {
-		VendaDTO dto = this.createValidVenda();
+		VendaDTO dto = this.mockUtil.vendaControllerMock();
 
 		ResultActions response = mockMvc.perform(
 				post("/venda").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
@@ -92,16 +90,75 @@ public class VendaControllerTest {
 		
 	}
 	
+	@Test
+	void cadastrarDataVendaNullTest() throws JsonProcessingException, Exception {
+		VendaDTO dto = this.mockUtil.vendaControllerMock();
+		dto.setDataVenda(null);
+
+	
+		ResultActions response = mockMvc.perform(
+				post("/categorias").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+	
+	@Test
+	void cadastrarItensVendaNullTest() throws JsonProcessingException, Exception {
+		VendaDTO dto = this.mockUtil.vendaControllerMock();
+		dto.setItens(null);
+
+	
+		ResultActions response = mockMvc.perform(
+				post("/categorias").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+	
+	@Test
+	void cadastrarUsuarioVendaNullTest() throws JsonProcessingException, Exception {
+		VendaDTO dto = this.mockUtil.vendaControllerMock();
+		dto.setUsuario(null);
+
+	
+		ResultActions response = mockMvc.perform(
+				post("/categorias").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+	
 	@Test	
 	void alterarTest() throws Exception {
-		VendaDTO dto = this.createValidVenda();
-		
-		VendaEntity entyEntity = vendaService.salvar(dto.toEntity());
-		
-		//int id = 1;
-
+		VendaDTO dto = this.mockUtil.vendaControllerMock();
+	
 		ResultActions response = mockMvc.perform(
-				put("/venda/" + entyEntity.getIdVenda()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+				put("/venda/" + dto.getIdVenda()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
@@ -109,7 +166,7 @@ public class VendaControllerTest {
 
 		VendaDTO updated = objectMapper.readValue(resultStr, VendaDTO.class);
 
-		//assertThat(updated.getIdVenda()).isEqualTo(id);
+		assertThat(updated.getIdVenda()).isEqualTo(dto.getIdVenda());
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 
@@ -118,18 +175,13 @@ public class VendaControllerTest {
 	
 	@Test	
 	void deleteTest() throws Exception {
-		int id = 1;
+		VendaDTO dto = this.mockUtil.vendaControllerMock();
 
-		ResultActions response = mockMvc.perform(delete("/venda/" + id).contentType("application/json"));
+		ResultActions response = mockMvc.perform(delete("/venda/" + dto.getIdVenda()).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 	}
 
-	private VendaDTO createValidVenda() {
-		
-		VendaDTO dto = VendaDTO.builder().dataVenda("17").build();
-		return dto;
-	}
 }

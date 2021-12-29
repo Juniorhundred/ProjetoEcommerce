@@ -18,12 +18,14 @@ public class CategoriaDTO {
 
 	private Integer idCategoria;
 	
-	//@NotNull(message = "Campo nome é obrigatório.")
+	@NotNull(message = "Campo nome é obrigatório.")
 	private String nomeCategoria;
 
 	public CategoriaEntity toEntity() {
 		var mapper = new ModelMapper();
 		return mapper.map(this, CategoriaEntity.class);
+		
+		
 
 	}
 }

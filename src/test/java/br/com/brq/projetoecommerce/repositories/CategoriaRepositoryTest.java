@@ -16,7 +16,7 @@ import br.com.brq.projetoecommerce.domain.CategoriaEntity;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class CategoriaRepositoryTest {
+class CategoriaRepositoryTest {
 	
 	@Autowired
 	private CategoriaRepository categoriaRepository;

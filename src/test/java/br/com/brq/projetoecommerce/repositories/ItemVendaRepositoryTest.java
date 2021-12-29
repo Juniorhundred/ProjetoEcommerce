@@ -16,7 +16,7 @@ import br.com.brq.projetoecommerce.domain.ItemVendaEntity;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class ItemVendaRepositoryTest {
+class ItemVendaRepositoryTest {
 	
 	@Autowired
 	private ItemVendaRepository itemVendaRepository;

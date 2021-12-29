@@ -18,7 +18,7 @@ public class ImagemDTO {
 
 	private Integer idImagem;
 	
-	//@NotNull(message = "Campo imagem é obrigatório.")
+	@NotNull(message = "Campo imagem é obrigatório.")
 	private String imagemProduto;
 	
 	public ImagemEntity toEntity() {

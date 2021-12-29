@@ -3,6 +3,8 @@ package br.com.brq.projetoecommerce.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +42,7 @@ public class ProdutoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ProdutoDTO> cadastrar(@RequestBody ProdutoDTO dto) {
+	public ResponseEntity<ProdutoDTO> cadastrar(@Valid @RequestBody ProdutoDTO dto) {
 		ProdutoEntity enty = produtoService.salvar(dto.toEntity());
 		ProdutoDTO dtoSave = enty.toDTO();
 		return ResponseEntity.ok().body(dtoSave);
@@ -48,7 +50,7 @@ public class ProdutoController {
 	}
 
 	@PutMapping(value = "{id}")
-	public ResponseEntity<ProdutoDTO> alterar(@RequestBody ProdutoDTO dto, @PathVariable("id") int id) {
+	public ResponseEntity<ProdutoDTO> alterar(@Valid @RequestBody ProdutoDTO dto, @PathVariable("id") int id) {
 
 		ProdutoEntity enty = produtoService.alterar(id, dto.toEntity());
 
@@ -56,7 +58,7 @@ public class ProdutoController {
 
 	}
 
-	// Deletar
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable int id) {
 		this.produtoService.deletar(id);

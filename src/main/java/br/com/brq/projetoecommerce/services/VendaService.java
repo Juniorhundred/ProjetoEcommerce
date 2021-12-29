@@ -1,6 +1,7 @@
 package br.com.brq.projetoecommerce.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,13 @@ public class VendaService {
 	}
 
 	public VendaEntity buscarVendaId(Integer id) {
-		return this.vendaRepository.findById(id)
-				.orElseThrow( () -> new ObjetoNaoEncontradoException("Venda não encontrada nova versão") );
+		Optional<VendaEntity> venda = vendaRepository.findById(id);
+		return venda
+				.orElseThrow( () -> new ObjetoNaoEncontradoException("Venda não encontrada.") );
 	}
 
 	public VendaEntity alterar(Integer id, VendaEntity vendaAlterada) {
-		VendaEntity vendaEntity = buscarVendaId(id);		
+		var vendaEntity = buscarVendaId(id);		
 		vendaEntity.setDataVenda(vendaAlterada.getDataVenda());
 		vendaEntity.setItens(vendaAlterada.getItens());
 		vendaEntity.setUsuario(vendaAlterada.getUsuario());

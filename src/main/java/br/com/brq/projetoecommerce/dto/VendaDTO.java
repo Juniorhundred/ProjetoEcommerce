@@ -19,13 +19,13 @@ import lombok.NoArgsConstructor;
 public class VendaDTO {
 
 	private Integer idVenda;
-	//@NotNull(message = "Campo data é obrigatório.")
+	@NotNull(message = "Campo data é obrigatório.")
 	private String dataVenda;
 
-	//@NotNull(message = "Campo produto é obrigatório.")
+	@NotNull(message = "Campo produto é obrigatório.")
 	private List<ItemVendaDTO> itens;
 
-	//@NotNull(message = "Campo usuário é obrigatório.")
+	@NotNull(message = "Campo usuário é obrigatório.")
 	private UsuarioDTO usuario;
 
 	public VendaEntity toEntity() {
