@@ -12,14 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.brq.projetoecommerce.domain.EnderecoEntity;
 import br.com.brq.projetoecommerce.domain.UsuarioEntity;
@@ -30,7 +27,7 @@ import br.com.brq.projetoecommerce.repositories.UsuarioRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UsuarioServiceTest {
+class UsuarioServiceTest {
 
 	@Autowired
 	private UsuarioService usuarioService;

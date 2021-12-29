@@ -17,7 +17,7 @@ import br.com.brq.projetoecommerce.domain.UsuarioEntity;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class UsuarioRepositoryTest {
+class UsuarioRepositoryTest {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;

@@ -1,3 +1,4 @@
+
 package br.com.brq.projetoecommerce.domain;
 
 import java.io.Serializable;
@@ -18,35 +19,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "endereco")
+@Entity
+@Table(name = "enderecos")
 public class EnderecoEntity implements Serializable {
 
+	private static final long serialVersionUID = 1430541589979579078L;
 
-private static final long serialVersionUID = 1430541589979579078L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENDERECO_GEN_SEQ")
+	@SequenceGenerator(sequenceName = "ENDERECO_SEQ", allocationSize = 1,
+	name = "ENDERECO_GEN_SEQ")
+	private Integer enderecoId;
+	private String logradouro;
+	private String numero;
+	private String complemento;
+	private String cep;
+	private String bairro;
+	private String cidade;
+	private String estado;
 
+	public EnderecoDTO toDTO() {
+		var mapper = new ModelMapper();
+		return mapper.map(this, EnderecoDTO.class);
+	}
 
-
-@Id
-@GeneratedValue (strategy = GenerationType.SEQUENCE, 
-generator = "ENDERECO_GEN_SEQ")
-@SequenceGenerator (sequenceName = "ENDERECO_SEQ", allocationSize = 1, 
-name = "ENDERECO_GEN_SEQ")
-private Integer enderecoId;
-private String logradouro;
-private String numero;
-private String complemento;
-private String cep;
-private String bairro;
-private String cidade;
-private String estado;
-
-
-
-public EnderecoDTO toDTO() {
-var mapper = new ModelMapper();
-return mapper.map(this, EnderecoDTO.class);
-}
