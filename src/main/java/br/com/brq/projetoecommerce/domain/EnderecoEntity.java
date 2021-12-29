@@ -1,3 +1,4 @@
+
 package br.com.brq.projetoecommerce.domain;
 
 import java.io.Serializable;
@@ -44,4 +45,4 @@ public class EnderecoEntity implements Serializable {
 		var mapper = new ModelMapper();
 		return mapper.map(this, EnderecoDTO.class);
 	}
-}
+

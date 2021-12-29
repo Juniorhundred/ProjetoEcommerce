@@ -3,11 +3,11 @@ package br.com.brq.projetoecommerce.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.brq.projetoecommerce.domain.ItemVendaEntity;
+import br.com.brq.projetoecommerce.exceptions.ObjetoNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.ItemVendaRepository;
 
 @Service
@@ -26,11 +26,12 @@ public class ItemVendaService {
 
 	public ItemVendaEntity buscarItemVendaId(Integer id) {
 		Optional<ItemVendaEntity> itemVenda = itemVendaRepository.findById(id);
-		return itemVenda.orElseThrow(() -> new ObjectNotFoundException(new ItemVendaEntity(), "Item Venda não encontrado"));
+		return itemVenda
+				.orElseThrow( () -> new ObjetoNaoEncontradoException("Item não encontrado.") );
 	}
 
-	public ItemVendaEntity alterar(Integer id, ItemVendaEntity itemVendaAlterada) throws ObjectNotFoundException {
-		ItemVendaEntity itemVendaEntity = buscarItemVendaId(id);
+	public ItemVendaEntity alterar(Integer id, ItemVendaEntity itemVendaAlterada) {
+		var itemVendaEntity = buscarItemVendaId(id);
 		itemVendaEntity.setIdItemVenda(itemVendaAlterada.getIdItemVenda());
 		itemVendaEntity.setItemProduto(itemVendaAlterada.getItemProduto());
 		itemVendaEntity.setItemQuantidade(itemVendaAlterada.getItemQuantidade());

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.modelmapper.ModelMapper;
@@ -27,7 +28,10 @@ public class CategoriaEntity implements Serializable {
 	private static final long serialVersionUID = 6033287835050072042L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue (strategy = GenerationType.SEQUENCE, 
+	generator = "CATEGORIA_GEN_SEQ")
+	@SequenceGenerator (sequenceName = "CATEGORIA_SEQ", allocationSize = 1, 
+	name = "CATEGORIA_GEN_SEQ")
 	private Integer idCategoria;
 	private String nomeCategoria;
 

@@ -3,11 +3,11 @@ package br.com.brq.projetoecommerce.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.brq.projetoecommerce.domain.ProdutoEntity;
+import br.com.brq.projetoecommerce.exceptions.ObjetoNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.ProdutoRepository;
 
 @Service
@@ -26,11 +26,11 @@ public class ProdutoService {
 
 	public ProdutoEntity buscarProdutoId(Integer id) {
 		Optional<ProdutoEntity> produto = produtoRepository.findById(id);
-		return produto.orElseThrow(() -> new ObjectNotFoundException(new ProdutoEntity(), "categoria não encontrada"));
+		return produto.orElseThrow( () -> new ObjetoNaoEncontradoException("Produto não encontrado."));
 	}
 
-	public ProdutoEntity alterar(Integer id, ProdutoEntity produtoAlterado) throws ObjectNotFoundException {
-		ProdutoEntity produtoEntity = buscarProdutoId(id);
+	public ProdutoEntity alterar(Integer id, ProdutoEntity produtoAlterado){
+		var produtoEntity = buscarProdutoId(id);
 		produtoEntity.setNome(produtoAlterado.getNome());
 		produtoEntity.setCategorias(produtoAlterado.getCategorias());
 		produtoEntity.setImagens(produtoAlterado.getImagens());

@@ -20,19 +20,19 @@ public class ProdutoDTO {
 	
 	private Integer idProduto; 
 	
-	//@NotNull(message = "Campo nome é obrigatório.")
+	@NotNull(message = "Campo nome é obrigatório.")
 	private String nome; 
 	
-	//@NotNull(message = "Campo preço é obrigatório.")
+	@NotNull(message = "Campo preço é obrigatório.")
 	private double preco;
 	
-	//@NotNull(message = "Campo descrição é obrigatório.")
+	@NotNull(message = "Campo descrição é obrigatório.")
 	private String descricao;
 	
-	//@NotNull(message = "Campo categoria é obrigatório.")
+	@NotNull(message = "Campo categoria é obrigatório.")
 	private List<CategoriaDTO> categorias;
 	
-	//@NotNull(message = "Campo imagem é obrigatório.")
+	@NotNull(message = "Campo imagem é obrigatório.")
 	private List <ImagemDTO> imagens;
 	
 	public ProdutoEntity toEntity() {

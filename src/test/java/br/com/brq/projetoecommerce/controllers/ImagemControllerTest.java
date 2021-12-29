@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,35 +18,33 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.yaml.snakeyaml.tokens.DocumentEndToken;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.brq.projetoecommerce.domain.ImagemEntity;
 import br.com.brq.projetoecommerce.dto.ImagemDTO;
-import br.com.brq.projetoecommerce.services.ImagemService;
+import br.com.brq.projetoecommerce.exceptions.ValidationError;
+import br.com.brq.projetoecommerce.utils.MockUtil;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ImagemControllerTest {
+class ImagemControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 	
 	@Autowired
-	private ImagemService imagemService;
+	MockUtil mockUtil;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Test
 	void buscarIdTest() throws Exception {
 		
-		ImagemDTO dto = this.createValidImagem();
-		ImagemEntity enty = imagemService.salvar(dto.toEntity());
+		ImagemDTO dto = this.mockUtil.imagemControllerMock();
 		ResultActions response = mockMvc.perform(
-				get("/imagens/" + enty.getIdImagem()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));		
+				get("/imagens/" + dto.getIdImagem()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));		
 
 		MvcResult result = response.andReturn();
 
@@ -53,8 +53,8 @@ public class ImagemControllerTest {
 		ImagemDTO imagemDTO = objectMapper.readValue(resultStr, ImagemDTO.class);
 	
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-		assertThat(imagemDTO.getIdImagem()).isEqualTo(enty.getIdImagem());
-		assertThat(imagemDTO.getImagemProduto()).isEqualTo(enty.getImagemProduto());
+		assertThat(imagemDTO.getIdImagem()).isEqualTo(dto.getIdImagem());
+		assertThat(imagemDTO.getImagemProduto()).isEqualTo(dto.getImagemProduto());
 
 	}
 	
@@ -74,7 +74,7 @@ public class ImagemControllerTest {
 	
 	@Test
 	void cadastrarTest() throws JsonProcessingException, Exception {
-		ImagemDTO dto = this.createValidImagem();
+		ImagemDTO dto = this.mockUtil.imagemControllerMock();
 
 		ResultActions response = mockMvc.perform(
 				post("/imagens").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
@@ -87,17 +87,35 @@ public class ImagemControllerTest {
 
 		assertThat(dtoResult.getIdImagem() > 0).isTrue();
 		assertThat(dtoResult.getImagemProduto()).isEqualTo(dto.getImagemProduto());
-		;
+		}
+	
+	@Test
+	void cadastrarImagemNullTest() throws JsonProcessingException, Exception {
+		ImagemDTO dto = this.mockUtil.imagemControllerMock();
+		dto.setImagemProduto(null);
+
+	
+		ResultActions response = mockMvc.perform(
+				post("/imagens").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+	
+		MvcResult result = response.andReturn();
+
+		
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
 	}
 	
 	@Test	
 	void alterarTest() throws Exception {
-		ImagemDTO dto = this.createValidImagem();
-
-		int id = 1;
+		ImagemDTO dto = this.mockUtil.imagemControllerMock();
 
 		ResultActions response = mockMvc.perform(
-				put("/imagens/" + id).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
+				put("/imagens/" + dto.getIdImagem()).content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
@@ -105,7 +123,7 @@ public class ImagemControllerTest {
 
 		ImagemDTO updated = objectMapper.readValue(resultStr, ImagemDTO.class);
 
-		assertThat(updated.getIdImagem()).isEqualTo(id);
+		assertThat(updated.getIdImagem()).isEqualTo(dto.getIdImagem());
 		assertThat(updated.getImagemProduto()).isEqualTo(dto.getImagemProduto());
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 
@@ -113,18 +131,13 @@ public class ImagemControllerTest {
 	
 	@Test	
 	void deleteTest() throws Exception {
-		int id = 1;
+		ImagemDTO dto = this.mockUtil.imagemControllerMock();
 
-		ResultActions response = mockMvc.perform(delete("/imagens/" + id).contentType("application/json"));
+		ResultActions response = mockMvc.perform(delete("/imagens/" + dto.getIdImagem()).contentType("application/json"));
 
 		MvcResult result = response.andReturn();
 
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 	}
 	
-	private ImagemDTO createValidImagem() {			
-		ImagemDTO dto = ImagemDTO.builder().imagemProduto("test").build();
-		return dto;
-	}
 }
-

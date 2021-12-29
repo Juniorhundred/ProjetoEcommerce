@@ -1,3 +1,4 @@
+
 package br.com.brq.projetoecommerce.domain;
 
 import java.io.Serializable;

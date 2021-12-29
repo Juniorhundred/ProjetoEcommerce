@@ -18,11 +18,18 @@ import javassist.tools.rmi.ObjectNotFoundException;
 public class ResourceExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<StandardError> methodArgumentNotValidException(MethodArgumentNotValidException e,
-			HttpServletRequest request) {
 
-		ValidationError ve = new ValidationError(new Date(), HttpStatus.UNPROCESSABLE_ENTITY.value(),
-				"Erro de Validação", "Erro de validação ao salvar/alterar a entidade", request.getRequestURI());
+	public ResponseEntity<StandardError> methodArgumentNotValidException
+			(MethodArgumentNotValidException e, HttpServletRequest request){
+		
+				var ve = new ValidationError(
+				new Date(),
+				HttpStatus.UNPROCESSABLE_ENTITY.value(),
+				"Erro de Validação",
+				"Erro de validação ao salvar/alterar a entidade",
+				request.getRequestURI()
+				);
+		
 
 		List<FieldError> errors = e.getBindingResult().getFieldErrors();
 

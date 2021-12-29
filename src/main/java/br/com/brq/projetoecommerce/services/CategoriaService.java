@@ -2,12 +2,11 @@ package br.com.brq.projetoecommerce.services;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.brq.projetoecommerce.domain.CategoriaEntity;
+import br.com.brq.projetoecommerce.exceptions.ObjetoNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.CategoriaRepository;
 
 @Service
@@ -27,12 +26,11 @@ public class CategoriaService {
 	public CategoriaEntity buscarCategoriaId(Integer id) {
 		Optional<CategoriaEntity> categoria = categoriaRepository.findById(id);
 		return categoria
-				.orElseThrow(() -> new ObjectNotFoundException(new CategoriaEntity(), "categoria não encontrada"));		
-
+				.orElseThrow( () -> new ObjetoNaoEncontradoException("Categoria não encontrada.") );
 	}
 
-	public CategoriaEntity alterar(Integer id, CategoriaEntity categoriaAlterada) throws ObjectNotFoundException {
-		CategoriaEntity categoriaEntity = buscarCategoriaId(id);
+	public CategoriaEntity alterar(Integer id, CategoriaEntity categoriaAlterada){
+		var categoriaEntity = buscarCategoriaId(id);
 		categoriaEntity.setNomeCategoria(categoriaAlterada.getNomeCategoria());
 		return salvar(categoriaEntity);
 	}
