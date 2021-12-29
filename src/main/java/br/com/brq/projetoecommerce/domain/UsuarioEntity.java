@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.modelmapper.ModelMapper;
@@ -24,16 +25,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "usuario")
+@Table(name = "usuarios")
 public class UsuarioEntity implements Serializable {
+	
 	private static final long serialVersionUID = 6984190767295670823L;
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USUARIO_GEN_SEQ")
+	@SequenceGenerator(sequenceName = "USUARIO_SEQ", allocationSize = 1,
+	name = "USUARIO_GEN_SEQ")
 	private Integer usuarioId;
 	private String nome;
 	private String cpf;
@@ -55,7 +61,7 @@ public class UsuarioEntity implements Serializable {
 	private UsuarioEntity usuario;
 	
 	public UsuarioDTO toDTO() {
-		ModelMapper modelMapper = new ModelMapper();
+		var modelMapper = new ModelMapper();
 		return modelMapper.map(this, UsuarioDTO.class);
 	}
 }

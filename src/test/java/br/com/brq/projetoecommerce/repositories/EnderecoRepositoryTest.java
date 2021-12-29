@@ -16,7 +16,7 @@ import br.com.brq.projetoecommerce.domain.EnderecoEntity;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public class EnderecoRepositoryTest {
+class EnderecoRepositoryTest {
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
