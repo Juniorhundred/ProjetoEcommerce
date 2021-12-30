@@ -22,6 +22,7 @@ import br.com.brq.projetoecommerce.domain.EnderecoEntity;
 import br.com.brq.projetoecommerce.domain.UsuarioEntity;
 import br.com.brq.projetoecommerce.dto.EnderecoDTO;
 import br.com.brq.projetoecommerce.dto.UsuarioDTO;
+import br.com.brq.projetoecommerce.exceptions.EnderecoNaoEncontradoException;
 import br.com.brq.projetoecommerce.exceptions.UsuarioNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.UsuarioRepository;
 
@@ -134,6 +135,36 @@ class UsuarioServiceTest {
 	}
 	
 	@Test
+	void alterarUsuarioEEnderecosFalhaTest() { /////////////////////////
+		int usuarioId = 1;
+
+		EnderecoEntity endereco = new EnderecoEntity();
+		
+		
+		UsuarioEntity usuarioEntity = this.createValidUsuario();
+		UsuarioDTO usuario = this.createValidUsuarioDTO();
+		usuario.setUsuarioId(usuarioId);
+		usuario.setEnderecos(null);
+		
+		List<EnderecoDTO> enderecos = new ArrayList<>();
+		//enderecos.add(EnderecoDTO.builder().build());
+		usuario.setEnderecos(enderecos);
+
+		
+		//when(enderecoService.buscarEnderecoId(1)).thenReturn(endereco);
+ 		when(usuarioRepository.findById(usuarioId)).thenReturn(Optional.of(usuarioEntity));
+		when(usuarioRepository.save(usuarioEntity)).thenReturn(usuarioEntity);
+
+		//UsuarioEntity updated = this.usuarioService.alterar(usuarioId, usuario);
+
+//		assertThat(updated.getNome()).isEqualTo(usuario.getNome());
+//		assertThat(updated.getEmail()).isEqualTo(usuario.getEmail());		
+//		assertThat(updated.getTelefone()).isEqualTo(usuario.getTelefone());
+//		assertThat(updated.getEnderecos().isEmpty()).isFalse();
+		assertThrows(EnderecoNaoEncontradoException.class, () -> this.usuarioService.alterar(usuarioId, usuario));
+	}
+	
+	@Test
 	void alterarFalhaTest() {
 
 		int idUsuario = 1;
@@ -157,7 +188,7 @@ class UsuarioServiceTest {
 
 	private UsuarioEntity createValidUsuario() {
 		return UsuarioEntity.builder().nome("Anderson").cpf("123.123.123-55")
-				.dataDeNascimento(LocalDate.of(2005, 12, 05)).celular("91234-5678").telefone("1234-5678")
+				.dataDeNascimento("1998, 05, 18").celular("91234-5678").telefone("1234-5678")
 				.email("boladinho@hotmail.com").enderecos(List.of(this.createValidEnderecoEntity())).build();
 	}
 
@@ -167,7 +198,7 @@ class UsuarioServiceTest {
 				.celular("11222223333")
 				.telefone("22223333")
 				.email("boladinhos@gmail.com")
-				.dataDeNascimento(LocalDate.of(1998, 05, 18))
+				.dataDeNascimento("1998, 05, 18")
 				.build();
 	}
 	

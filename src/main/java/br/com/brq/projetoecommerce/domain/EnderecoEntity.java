@@ -28,10 +28,13 @@ public class EnderecoEntity implements Serializable {
 
 	private static final long serialVersionUID = 1430541589979579078L;
 
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENDERECO_GEN_SEQ")
+//	@SequenceGenerator(sequenceName = "ENDERECO_SEQ", allocationSize = 1,
+//	name = "ENDERECO_GEN_SEQ")
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENDERECO_GEN_SEQ")
-	@SequenceGenerator(sequenceName = "ENDERECO_SEQ", allocationSize = 1,
-	name = "ENDERECO_GEN_SEQ")
+	@GeneratedValue (strategy = GenerationType.IDENTITY) 
 	private Integer enderecoId;
 	private String logradouro;
 	private String numero;

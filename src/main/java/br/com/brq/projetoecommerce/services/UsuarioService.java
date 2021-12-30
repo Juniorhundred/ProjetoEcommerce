@@ -11,6 +11,7 @@ import br.com.brq.projetoecommerce.domain.EnderecoEntity;
 import br.com.brq.projetoecommerce.domain.UsuarioEntity;
 import br.com.brq.projetoecommerce.dto.EnderecoDTO;
 import br.com.brq.projetoecommerce.dto.UsuarioDTO;
+import br.com.brq.projetoecommerce.exceptions.EnderecoNaoEncontradoException;
 import br.com.brq.projetoecommerce.exceptions.UsuarioNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.UsuarioRepository;
 
@@ -23,13 +24,18 @@ public class UsuarioService {
 	@Autowired
 	private EnderecoService enderecoService;
 
-	public UsuarioEntity salvar(UsuarioEntity usuario) {
+	public UsuarioEntity salvar(UsuarioEntity usuario) { 
 
-		enderecoService.salvar(usuario.getEnderecos().get(0));
+		if (usuario.getEnderecos().isEmpty()) {
+			
+			throw new UsuarioNaoEncontradoException("Endereço não encontrado");
+		} else {
 
-		return usuarioRepository.save(usuario);
+			enderecoService.salvar(usuario.getEnderecos().get(0));
+			return usuarioRepository.save(usuario); 
+		}
+
 	}
-
 
 	public List<UsuarioEntity> listaTodosUsuarios() {
 		return usuarioRepository.findAll();
@@ -49,20 +55,22 @@ public class UsuarioService {
 
 			usuarioExistente.setNome(alteracao.getNome());
 			usuarioExistente.setCpf(alteracao.getCpf());
-			usuarioExistente.setEmail(alteracao.getEmail()); 
+			usuarioExistente.setEmail(alteracao.getEmail());
 			usuarioExistente.setCelular(alteracao.getCelular());
 			usuarioExistente.setTelefone(alteracao.getTelefone());
 
-		//Validando se existem enderecos para serem alterados
-		if (!alteracao.getEnderecos().isEmpty()) {
+			// Validando se existem enderecos para serem alterados
+			if (!alteracao.getEnderecos().isEmpty()) {
 				int enderecoId = alteracao.getEnderecos().get(0).getEnderecoId();
 				List<EnderecoEntity> enderecos = alteracao.getEnderecos().stream().map(EnderecoDTO::toEntity)
 						.collect(Collectors.toList());
 
 				this.enderecoService.alterar(enderecoId, enderecos.get(0));
+				return this.usuarioRepository.save(usuarioExistente);
+			}else {
+				throw new EnderecoNaoEncontradoException("Endereço Vazio");
 			}
-
-			return this.usuarioRepository.save(usuarioExistente);
+			
 		} else {
 
 			throw new UsuarioNaoEncontradoException("Usuario(a) nao encontrado(a)");

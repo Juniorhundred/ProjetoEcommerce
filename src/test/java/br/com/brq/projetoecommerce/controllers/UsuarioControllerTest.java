@@ -148,7 +148,7 @@ class UsuarioControllerTest {
 				.nome("Karina").cpf("123.123.123-55")
 				.celular("91234-5678").telefone("1234-5678")
 				.email("boladinho@hotmail.com")
-				.dataDeNascimento(LocalDate.of(1998, 05, 18))
+				.dataDeNascimento("1998, 05, 18")
 				.enderecos(List.of(this.createValidEndereco())).build();
 	}
 
@@ -163,7 +163,7 @@ class UsuarioControllerTest {
 		return UsuarioEntity.builder()
 				.usuarioId(1)
 				.nome("Karina").cpf("123.123.123-55")
-				.dataDeNascimento(LocalDate.of(1998, 05, 18)).celular("91234-5678").telefone("1234-5678")
+				.dataDeNascimento("1998, 05, 18").celular("91234-5678").telefone("1234-5678")
 				.email("boladinho@hotmail.com").build();
 	}
 

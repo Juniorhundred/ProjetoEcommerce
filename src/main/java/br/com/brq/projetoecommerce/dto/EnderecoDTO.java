@@ -20,13 +20,17 @@ public class EnderecoDTO {
 	
 	@NotNull(message = "Campo obrigatório")
 	private String logradouro;
+	@NotNull(message = "Campo obrigatório")
 	private String numero;
+	@NotNull(message = "Campo obrigatório")
 	private String complemento;
-
 	@NotNull(message = "Campo obrigatório")
 	private String cep;
+	@NotNull(message = "Campo obrigatório")
 	private String bairro;
+	@NotNull(message = "Campo obrigatório")
 	private String cidade;
+	@NotNull(message = "Campo obrigatório")
 	private String estado;
 
 	public EnderecoEntity toEntity() {

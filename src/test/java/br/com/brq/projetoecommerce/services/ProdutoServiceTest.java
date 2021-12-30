@@ -19,7 +19,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import br.com.brq.projetoecommerce.domain.CategoriaEntity;
+import br.com.brq.projetoecommerce.domain.ImagemEntity;
 import br.com.brq.projetoecommerce.domain.ProdutoEntity;
+import br.com.brq.projetoecommerce.dto.CategoriaDTO;
+import br.com.brq.projetoecommerce.dto.ImagemDTO;
 import br.com.brq.projetoecommerce.exceptions.ObjetoNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.ProdutoRepository;
 import br.com.brq.projetoecommerce.utils.MockUtil;
@@ -44,7 +48,7 @@ class ProdutoServiceTest {
 
 		List<ProdutoEntity> listMock = new ArrayList<>();
 
-		ProdutoEntity produto = this.mockUtil.produtoMock();
+		ProdutoEntity produto = produtoMock();
 		listMock.add(produto);
 
 		when(produtoRepository.findAll()).thenReturn(listMock);
@@ -60,7 +64,7 @@ class ProdutoServiceTest {
 
 		int id = 1;
 
-		ProdutoEntity produto = this.mockUtil.produtoMock();
+		ProdutoEntity produto = produtoMock();
 
 		when(produtoRepository.save(produto)).thenReturn(produto);
 
@@ -78,7 +82,7 @@ class ProdutoServiceTest {
 	void buscarProdutoIdSucessoTest() {
 		
 		int id = 1;
-		ProdutoEntity produto = this.mockUtil.produtoMock();
+		ProdutoEntity produto = produtoMock();
 		Optional<ProdutoEntity> optional = Optional.of(produto);
 
 		when(produtoRepository.findById(id)).thenReturn(optional);
@@ -105,7 +109,7 @@ class ProdutoServiceTest {
 	void alterarSucessoTest() {
 		
 		int idProduto = 1;
-		ProdutoEntity produto = this.mockUtil.produtoMock();
+		ProdutoEntity produto = produtoMock();
 		produto.setIdProduto(idProduto);
 
 		when(produtoRepository.findById(idProduto)).thenReturn(Optional.of(produto));
@@ -124,7 +128,7 @@ class ProdutoServiceTest {
 	void alterarFalhaTest() {
 		
 		int idProduto = 1;
-		ProdutoEntity produto = this.mockUtil.produtoMock();
+		ProdutoEntity produto = produtoMock();
 		produto.setIdProduto(idProduto);
 
 		when(produtoRepository.findById(idProduto)).thenReturn(Optional.empty());
@@ -139,5 +143,11 @@ class ProdutoServiceTest {
 
 		assertDoesNotThrow(() -> produtoService.deletar(idProduto));
 		verify(produtoRepository, times(1)).deleteById(idProduto);
-	}	
+	}
+	
+	public ProdutoEntity produtoMock() {	
+
+		return ProdutoEntity.builder().nome("Xiaomi").preco(2000).descricao("Celular Chines").categorias(null)
+				.imagens(null).build();
+	}
 }
