@@ -142,7 +142,7 @@ class UsuarioServiceTest {
 	}
 	
 	@Test
-	void alterarUsuarioEEnderecosFalhaTest() { /////////////////////////
+	void alterarUsuarioEEnderecosFalhaTest() { 
 		int usuarioId = 1;
 
 		EnderecoEntity endereco = new EnderecoEntity();
@@ -154,20 +154,13 @@ class UsuarioServiceTest {
 		usuario.setEnderecos(null);
 		
 		List<EnderecoDTO> enderecos = new ArrayList<>();
-		//enderecos.add(EnderecoDTO.builder().build());
-		usuario.setEnderecos(enderecos);
 
+		usuario.setEnderecos(enderecos);
 		
-		//when(enderecoService.buscarEnderecoId(1)).thenReturn(endereco);
  		when(usuarioRepository.findById(usuarioId)).thenReturn(Optional.of(usuarioEntity));
 		when(usuarioRepository.save(usuarioEntity)).thenReturn(usuarioEntity);
 
-		//UsuarioEntity updated = this.usuarioService.alterar(usuarioId, usuario);
 
-//		assertThat(updated.getNome()).isEqualTo(usuario.getNome());
-//		assertThat(updated.getEmail()).isEqualTo(usuario.getEmail());		
-//		assertThat(updated.getTelefone()).isEqualTo(usuario.getTelefone());
-//		assertThat(updated.getEnderecos().isEmpty()).isFalse();
 		assertThrows(EnderecoNaoEncontradoException.class, () -> this.usuarioService.alterar(usuarioId, usuario));
 	}
 	
