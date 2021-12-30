@@ -29,8 +29,13 @@ public class UsuarioService {
 		if (usuario.getEnderecos().isEmpty()) {
 			
 			throw new UsuarioNaoEncontradoException("Endereço não encontrado");
+		} else {
+			for (int i=0; i < usuario.getEnderecos().size(); i++) {
+				EnderecoEntity endereco = usuario.getEnderecos().get(i);
+				enderecoService.salvar(endereco);
+			}
 		}
-		
+		  
 			return usuarioRepository.save(usuario); 
 	}
 

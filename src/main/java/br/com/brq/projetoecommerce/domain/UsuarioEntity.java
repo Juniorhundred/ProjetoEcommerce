@@ -51,7 +51,7 @@ public class UsuarioEntity implements Serializable {
 	private String email;
 
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(name = "REL_USUARIO_ENDERECO", joinColumns = { @JoinColumn(name = "usuarioId") }, inverseJoinColumns = {
 			@JoinColumn(name = "enderecoId") })
 	List<EnderecoEntity> enderecos;

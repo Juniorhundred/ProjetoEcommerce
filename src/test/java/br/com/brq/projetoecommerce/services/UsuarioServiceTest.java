@@ -62,7 +62,7 @@ class UsuarioServiceTest {
 		UsuarioEntity usuario = createValidUsuario();
 
 		when(usuarioRepository.save(usuario)).thenReturn(usuario);
-		
+		when(enderecoService.salvar(this.createValidEnderecoEntity())).thenReturn(this.createValidEnderecoEntity());
 		UsuarioEntity resultUsuario = usuarioRepository.save(usuario);
 		resultUsuario.setUsuarioId(id);
 
