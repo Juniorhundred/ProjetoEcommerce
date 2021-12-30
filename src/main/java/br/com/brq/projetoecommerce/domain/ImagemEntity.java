@@ -27,10 +27,7 @@ public class ImagemEntity implements Serializable {
 
 	private static final long serialVersionUID = -7273751607202792337L;
 	@Id
-	@GeneratedValue (strategy = GenerationType.SEQUENCE, 
-	generator = "IMAGEM_GEN_SEQ")
-	@SequenceGenerator (sequenceName = "IMAGEM_SEQ", allocationSize = 1, 
-	name = "IMAGEM_GEN_SEQ")
+	@GeneratedValue (strategy = GenerationType.IDENTITY)  
 	private Integer idImagem;
 	private String imagemProduto;
 	

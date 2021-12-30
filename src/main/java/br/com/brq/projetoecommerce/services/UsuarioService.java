@@ -30,7 +30,6 @@ public class UsuarioService {
 		return usuarioRepository.save(usuario);
 	}
 
-
 	public List<UsuarioEntity> listaTodosUsuarios() {
 		return usuarioRepository.findAll();
 	}
@@ -49,12 +48,12 @@ public class UsuarioService {
 
 			usuarioExistente.setNome(alteracao.getNome());
 			usuarioExistente.setCpf(alteracao.getCpf());
-			usuarioExistente.setEmail(alteracao.getEmail()); 
+			usuarioExistente.setEmail(alteracao.getEmail());
 			usuarioExistente.setCelular(alteracao.getCelular());
 			usuarioExistente.setTelefone(alteracao.getTelefone());
 
-		//Validando se existem enderecos para serem alterados
-		if (!alteracao.getEnderecos().isEmpty()) {
+			
+			if (!alteracao.getEnderecos().isEmpty()) {
 				int enderecoId = alteracao.getEnderecos().get(0).getEnderecoId();
 				List<EnderecoEntity> enderecos = alteracao.getEnderecos().stream().map(EnderecoDTO::toEntity)
 						.collect(Collectors.toList());

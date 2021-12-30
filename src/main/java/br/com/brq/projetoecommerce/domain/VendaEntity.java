@@ -30,10 +30,7 @@ public class VendaEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue (strategy = GenerationType.SEQUENCE, 
-	generator = "VENDA_GEN_SEQ")
-	@SequenceGenerator (sequenceName = "VENDA_SEQ", allocationSize = 1, 
-	name = "VENDA_GEN_SEQ")
+	@GeneratedValue (strategy = GenerationType.IDENTITY) 
 	private Integer idVenda;
 
 	private String dataVenda;

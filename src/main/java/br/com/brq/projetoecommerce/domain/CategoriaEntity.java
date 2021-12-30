@@ -28,10 +28,7 @@ public class CategoriaEntity implements Serializable {
 	private static final long serialVersionUID = 6033287835050072042L;
 
 	@Id
-	@GeneratedValue (strategy = GenerationType.SEQUENCE, 
-	generator = "CATEGORIA_GEN_SEQ")
-	@SequenceGenerator (sequenceName = "CATEGORIA_SEQ", allocationSize = 1, 
-	name = "CATEGORIA_GEN_SEQ")
+	@GeneratedValue (strategy = GenerationType.IDENTITY) 
 	private Integer idCategoria;
 	private String nomeCategoria;
 
