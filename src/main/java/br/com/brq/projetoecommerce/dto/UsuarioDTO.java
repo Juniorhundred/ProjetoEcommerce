@@ -27,7 +27,7 @@ public class UsuarioDTO {
 
 	@NotNull(message = "Campo obrigatório")
 	private String cpf;
-	private LocalDate dataDeNascimento;
+	private String dataDeNascimento;
 	private String celular;
 	private String telefone;
 	private String email;

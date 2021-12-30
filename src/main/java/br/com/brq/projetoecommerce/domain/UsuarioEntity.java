@@ -44,7 +44,7 @@ public class UsuarioEntity implements Serializable {
 	private Integer usuarioId;
 	private String nome;
 	private String cpf;
-	private LocalDate dataDeNascimento;
+	private String dataDeNascimento;
 	private String celular;
 	private String telefone;
 	private String email;

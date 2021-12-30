@@ -75,7 +75,7 @@ class UsuarioRepositoryTest {
 
 	private UsuarioEntity createValidUsuario() {
 		return UsuarioEntity.builder().nome("Anderson").cpf("123.123.123-55")
-				.dataDeNascimento(LocalDate.of(2005, 12, 05)).celular("91234-5678").telefone("1234-5678")
+				.dataDeNascimento("1998, 05, 18").celular("91234-5678").telefone("1234-5678")
 				.email("boladinho@hotmail.com").build();
 	}
 }

@@ -157,7 +157,7 @@ class UsuarioServiceTest {
 
 	private UsuarioEntity createValidUsuario() {
 		return UsuarioEntity.builder().nome("Anderson").cpf("123.123.123-55")
-				.dataDeNascimento(LocalDate.of(2005, 12, 05)).celular("91234-5678").telefone("1234-5678")
+				.dataDeNascimento("1998, 05, 18").celular("91234-5678").telefone("1234-5678")
 				.email("boladinho@hotmail.com").enderecos(List.of(this.createValidEnderecoEntity())).build();
 	}
 
@@ -167,7 +167,7 @@ class UsuarioServiceTest {
 				.celular("11222223333")
 				.telefone("22223333")
 				.email("boladinhos@gmail.com")
-				.dataDeNascimento(LocalDate.of(1998, 05, 18))
+				.dataDeNascimento("1998, 05, 18")
 				.build();
 	}
 	
