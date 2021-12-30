@@ -12,7 +12,7 @@ import br.com.brq.projetoecommerce.repositories.VendaRepository;
 
 @Service
 public class VendaService {
-	
+
 	@Autowired
 	private VendaRepository vendaRepository;
 
@@ -21,17 +21,16 @@ public class VendaService {
 	}
 
 	public VendaEntity salvar(VendaEntity venda) {
-		return vendaRepository.save(venda); 
+		return vendaRepository.save(venda);
 	}
 
 	public VendaEntity buscarVendaId(Integer id) {
 		Optional<VendaEntity> venda = vendaRepository.findById(id);
-		return venda
-				.orElseThrow( () -> new ObjetoNaoEncontradoException("Venda não encontrada.") );
+		return venda.orElseThrow(() -> new ObjetoNaoEncontradoException("Venda não encontrada."));
 	}
 
 	public VendaEntity alterar(Integer id, VendaEntity vendaAlterada) {
-		var vendaEntity = buscarVendaId(id);		
+		var vendaEntity = buscarVendaId(id);
 		vendaEntity.setDataVenda(vendaAlterada.getDataVenda());
 		vendaEntity.setItens(vendaAlterada.getItens());
 		vendaEntity.setUsuario(vendaAlterada.getUsuario());

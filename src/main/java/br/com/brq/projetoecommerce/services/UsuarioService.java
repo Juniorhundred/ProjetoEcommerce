@@ -60,8 +60,8 @@ public class UsuarioService {
 			usuarioExistente.setEmail(alteracao.getEmail());
 			usuarioExistente.setCelular(alteracao.getCelular());
 			usuarioExistente.setTelefone(alteracao.getTelefone());
-
-			// Validando se existem enderecos para serem alterados
+			
+      
 			if (!alteracao.getEnderecos().isEmpty()) {
 				int enderecoId = alteracao.getEnderecos().get(0).getEnderecoId();
 				List<EnderecoEntity> enderecos = alteracao.getEnderecos().stream().map(EnderecoDTO::toEntity)

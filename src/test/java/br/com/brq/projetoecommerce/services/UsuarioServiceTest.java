@@ -118,7 +118,7 @@ class UsuarioServiceTest {
 	void alterarUsuarioEEnderecosTest() {
 		int usuarioId = 1;
 
-		EnderecoEntity endereco = this.createValidEnderecoEntity();
+		EnderecoEntity endereco = new EnderecoEntity();
 		
 		UsuarioEntity usuarioEntity = this.createValidUsuario();
 		UsuarioDTO usuario = this.createValidUsuarioDTO();
@@ -140,6 +140,9 @@ class UsuarioServiceTest {
 		assertThat(updated.getEmail()).isEqualTo(usuario.getEmail());
 		assertThat(updated.getTelefone()).isEqualTo(usuario.getTelefone());
 	}
+	
+	
+	
 	
 	@Test
 	void alterarUsuarioEEnderecosFalhaTest() { 

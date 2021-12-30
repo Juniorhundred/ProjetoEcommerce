@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.brq.projetoecommerce.dto.EnderecoDTO;
+import br.com.brq.projetoecommerce.dto.UsuarioDTO;
+import br.com.brq.projetoecommerce.exceptions.ValidationError;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -28,7 +32,7 @@ import br.com.brq.projetoecommerce.dto.EnderecoDTO;
 class EnderecoControllerTest {
 
 	@Autowired
-	private MockMvc mockMvc; 
+	private MockMvc mockMvc;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -44,7 +48,7 @@ class EnderecoControllerTest {
 		EnderecoDTO enderecoDTO = objectMapper.readValue(resultStr, EnderecoDTO.class);
 		System.out.println(enderecoDTO);
 
-		// apenas comparando o status da resposta
+// apenas comparando o status da resposta
 		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
 		assertThat(enderecoDTO.getEnderecoId()).isEqualTo(1);
 
@@ -88,6 +92,132 @@ class EnderecoControllerTest {
 	}
 
 	@Test
+	void cadastrarLogradouroNullTest() throws JsonProcessingException, Exception {
+		EnderecoDTO endereco = this.createValidEndereco();
+		endereco.setLogradouro(null);
+
+		ResultActions response = mockMvc.perform(
+				post("/enderecos").content(objectMapper.writeValueAsString(endereco)).contentType("application/json"));
+
+		MvcResult result = response.andReturn();
+
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+
+	@Test
+	void cadastrarNumeroNullTest() throws JsonProcessingException, Exception {
+		EnderecoDTO endereco = this.createValidEndereco();
+		endereco.setNumero(null);
+
+		ResultActions response = mockMvc.perform(
+				post("/enderecos").content(objectMapper.writeValueAsString(endereco)).contentType("application/json"));
+
+		MvcResult result = response.andReturn();
+
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+
+	@Test
+	void cadastrarComplementoNullTest() throws JsonProcessingException, Exception {
+		EnderecoDTO endereco = this.createValidEndereco();
+		endereco.setComplemento(null);
+
+		ResultActions response = mockMvc.perform(
+				post("/enderecos").content(objectMapper.writeValueAsString(endereco)).contentType("application/json"));
+
+		MvcResult result = response.andReturn();
+
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+
+	@Test
+	void cadastrarCepNullTest() throws JsonProcessingException, Exception {
+		EnderecoDTO endereco = this.createValidEndereco();
+		endereco.setCep(null);
+
+		ResultActions response = mockMvc.perform(
+				post("/enderecos").content(objectMapper.writeValueAsString(endereco)).contentType("application/json"));
+
+		MvcResult result = response.andReturn();
+
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+
+	@Test
+	void cadastrarBairroNullTest() throws JsonProcessingException, Exception {
+		EnderecoDTO endereco = this.createValidEndereco();
+		endereco.setBairro(null);
+
+		ResultActions response = mockMvc.perform(
+				post("/enderecos").content(objectMapper.writeValueAsString(endereco)).contentType("application/json"));
+
+		MvcResult result = response.andReturn();
+
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+
+	@Test
+	void cadastrarCidadeNullTest() throws JsonProcessingException, Exception {
+		EnderecoDTO endereco = this.createValidEndereco();
+		endereco.setCidade(null);
+
+		ResultActions response = mockMvc.perform(
+				post("/enderecos").content(objectMapper.writeValueAsString(endereco)).contentType("application/json"));
+
+		MvcResult result = response.andReturn();
+
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+
+	@Test
+	void cadastrarEstadoNullTest() throws JsonProcessingException, Exception {
+		EnderecoDTO endereco = this.createValidEndereco();
+		endereco.setEstado(null);
+
+		ResultActions response = mockMvc.perform(
+				post("/enderecos").content(objectMapper.writeValueAsString(endereco)).contentType("application/json"));
+
+		MvcResult result = response.andReturn();
+
+		String objStr = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+		ValidationError error = objectMapper.readValue(objStr, ValidationError.class);
+
+		assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		assertThat(error.getError()).isEqualTo("Erro de Validação");
+	}
+
+	@Test
 	void alterarTest() throws Exception {
 		EnderecoDTO dto = this.createValidEndereco();
 
@@ -128,8 +258,8 @@ class EnderecoControllerTest {
 	}
 
 	private EnderecoDTO createValidEndereco() {
-			return EnderecoDTO.builder().logradouro("Rua do Anderson").numero("55").complemento("ap 12").cep("91234-567")
-					.cidade("Cidade do Anderson").bairro("Bairro dos boladinhos").estado("estado laico").build();
+		return EnderecoDTO.builder().logradouro("Rua do Anderson").numero("55").complemento("ap 12").cep("91234-567")
+				.cidade("Cidade do Anderson").bairro("Bairro dos boladinhos").estado("estado laico").build();
 
 	}
 }

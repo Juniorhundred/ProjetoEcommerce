@@ -36,11 +36,6 @@ public class UsuarioEntity implements Serializable {
 	
 	private static final long serialVersionUID = 6984190767295670823L;
 	
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USUARIO_GEN_SEQ")
-//	@SequenceGenerator(sequenceName = "USUARIO_SEQ", allocationSize = 1,
-//	name = "USUARIO_GEN_SEQ")
-	
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY) 
 	private Integer usuarioId;

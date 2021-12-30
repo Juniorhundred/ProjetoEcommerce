@@ -32,11 +32,6 @@ public class ProdutoEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1581475916977624272L;
 	
-//	@Id
-//	@GeneratedValue (strategy = GenerationType.SEQUENCE, 
-//	generator = "PRODUTO_GEN_SEQ")
-//	@SequenceGenerator (sequenceName = "PRODUTO_SEQ", allocationSize = 1, 
-//	name = "PRODUTO_GEN_SEQ")
 	
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY) 
