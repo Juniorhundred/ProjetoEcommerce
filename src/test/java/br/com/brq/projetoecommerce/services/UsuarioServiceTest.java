@@ -7,7 +7,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +62,6 @@ class UsuarioServiceTest {
 		UsuarioEntity usuario = createValidUsuario();
 
 		when(usuarioRepository.save(usuario)).thenReturn(usuario);
-		when(enderecoService.salvar(this.createValidEnderecoEntity())).thenReturn(this.createValidEnderecoEntity());
 		
 		UsuarioEntity resultUsuario = usuarioRepository.save(usuario);
 		resultUsuario.setUsuarioId(id);

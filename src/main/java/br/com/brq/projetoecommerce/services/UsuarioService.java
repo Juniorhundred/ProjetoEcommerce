@@ -29,12 +29,9 @@ public class UsuarioService {
 		if (usuario.getEnderecos().isEmpty()) {
 			
 			throw new UsuarioNaoEncontradoException("Endereço não encontrado");
-		} else {
-
-			enderecoService.salvar(usuario.getEnderecos().get(0));
-			return usuarioRepository.save(usuario); 
 		}
-
+		
+			return usuarioRepository.save(usuario); 
 	}
 
 	public List<UsuarioEntity> listaTodosUsuarios() {
