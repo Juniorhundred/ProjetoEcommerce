@@ -30,6 +30,12 @@ import lombok.NoArgsConstructor;
 public class ItemVendaEntity implements Serializable{
 	 
 	private static final long serialVersionUID = 6755240900315097949L;
+//	
+//	@GeneratedValue (strategy = GenerationType.SEQUENCE, 
+//			generator = "ITEMVENDA_GEN_SEQ")
+//			@SequenceGenerator (sequenceName = "ITEMVENDA_SEQ", allocationSize = 1, 
+//			name = "ITEMVENDA_GEN_SEQ")
+//	@Id
 	
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY) 

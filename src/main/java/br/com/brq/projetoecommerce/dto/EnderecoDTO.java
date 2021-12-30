@@ -24,7 +24,6 @@ public class EnderecoDTO {
 	private String numero;
 	@NotNull(message = "Campo obrigatório")
 	private String complemento;
-
 	@NotNull(message = "Campo obrigatório")
 	private String cep;
 	@NotNull(message = "Campo obrigatório")

@@ -21,7 +21,7 @@ public class EnderecoService {
 	}
 
 	public EnderecoEntity salvar(EnderecoEntity endereco) {
-		return enderecoRepository.save(endereco);
+		return enderecoRepository.save(endereco); 
 	}
 
 	public EnderecoEntity buscarEnderecoId(Integer id) {

@@ -27,9 +27,9 @@ import lombok.NoArgsConstructor;
 public class EnderecoEntity implements Serializable {
 
 	private static final long serialVersionUID = 1430541589979579078L;
-
+	
 	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@GeneratedValue (strategy = GenerationType.IDENTITY) 
 	private Integer enderecoId;
 	private String logradouro;
 	private String numero;

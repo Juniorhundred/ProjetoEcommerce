@@ -137,19 +137,11 @@ UsuarioDTO dto = this.createValidUsuario();
 ResultActions response = mockMvc.perform(
 post("/usuarios").content(objectMapper.writeValueAsString(dto)).contentType("application/json"));
 
-
-
 MvcResult result = response.andReturn();
-
-
 
 String objStr = result.getResponse().getContentAsString();
 
-
-
 UsuarioDTO dtoResult = objectMapper.readValue(objStr, UsuarioDTO.class);
-
-
 
 assertThat(dtoResult.getUsuarioId() > 0).isTrue();
 assertThat(dtoResult.getNome()).isEqualTo(dto.getNome());

@@ -22,8 +22,6 @@ public class UsuarioDTO {
 	
 	@NotNull(message = "Campo obrigatório")
 	private String nome;
-
-
 	@NotNull(message = "Campo obrigatório")
 	private String cpf;
 	@NotNull(message = "Campo obrigatório")

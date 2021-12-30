@@ -24,10 +24,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "imagem")
 public class ImagemEntity implements Serializable {
-
-	private static final long serialVersionUID = -7273751607202792337L;
+	
 	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)  
+	@GeneratedValue (strategy = GenerationType.IDENTITY) 
 	private Integer idImagem;
 	private String imagemProduto;
 	

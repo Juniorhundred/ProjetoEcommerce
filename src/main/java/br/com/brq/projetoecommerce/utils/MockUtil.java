@@ -67,7 +67,7 @@ public class MockUtil {
 
 	public ProdutoDTO produtoControllerMock() {
 
-		CategoriaDTO categoriaMock = this.categoriaControllerMock();
+		CategoriaDTO categoriaMock = this.categoriaControllerMock(); 
 
 		List<CategoriaEntity> listCat = new ArrayList<>();
 		listCat.add(categoriaMock.toEntity());
@@ -141,7 +141,19 @@ public class MockUtil {
 	}
 
 	public ProdutoEntity produtoMock() {
-		return ProdutoEntity.builder().nome("Xiaomi").preco(2000).descricao("Celular Chines").build();
+
+		CategoriaDTO categoriaMock = this.categoriaControllerMock();
+
+		List<CategoriaEntity> listCat = new ArrayList<>();
+		listCat.add(categoriaMock.toEntity());
+
+		ImagemDTO imagemMock = this.imagemControllerMock();
+
+		List<ImagemEntity> listIma = new ArrayList<>();
+		listIma.add(imagemMock.toEntity());
+
+		return ProdutoEntity.builder().nome("Xiaomi").preco(2000).descricao("Celular Chines").categorias(listCat)
+				.imagens(listIma).build();
 	}
 
 	public VendaEntity vendaMock() {

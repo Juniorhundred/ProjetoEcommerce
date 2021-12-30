@@ -11,6 +11,7 @@ import br.com.brq.projetoecommerce.domain.EnderecoEntity;
 import br.com.brq.projetoecommerce.domain.UsuarioEntity;
 import br.com.brq.projetoecommerce.dto.EnderecoDTO;
 import br.com.brq.projetoecommerce.dto.UsuarioDTO;
+import br.com.brq.projetoecommerce.exceptions.EnderecoNaoEncontradoException;
 import br.com.brq.projetoecommerce.exceptions.UsuarioNaoEncontradoException;
 import br.com.brq.projetoecommerce.repositories.UsuarioRepository;
 
@@ -23,11 +24,19 @@ public class UsuarioService {
 	@Autowired
 	private EnderecoService enderecoService;
 
-	public UsuarioEntity salvar(UsuarioEntity usuario) {
+	public UsuarioEntity salvar(UsuarioEntity usuario) { 
 
-		enderecoService.salvar(usuario.getEnderecos().get(0));
-
-		return usuarioRepository.save(usuario);
+		if (usuario.getEnderecos() == null) {
+			
+			throw new UsuarioNaoEncontradoException("Endereço não encontrado");
+		} else {
+			for (var i=0; i < usuario.getEnderecos().size(); i++) {
+				EnderecoEntity endereco = usuario.getEnderecos().get(i);
+				enderecoService.salvar(endereco);
+			}
+		}
+		  
+			return usuarioRepository.save(usuario); 
 	}
 
 	public List<UsuarioEntity> listaTodosUsuarios() {
@@ -51,17 +60,19 @@ public class UsuarioService {
 			usuarioExistente.setEmail(alteracao.getEmail());
 			usuarioExistente.setCelular(alteracao.getCelular());
 			usuarioExistente.setTelefone(alteracao.getTelefone());
-
 			
+      
 			if (!alteracao.getEnderecos().isEmpty()) {
 				int enderecoId = alteracao.getEnderecos().get(0).getEnderecoId();
 				List<EnderecoEntity> enderecos = alteracao.getEnderecos().stream().map(EnderecoDTO::toEntity)
 						.collect(Collectors.toList());
 
 				this.enderecoService.alterar(enderecoId, enderecos.get(0));
+				return this.usuarioRepository.save(usuarioExistente);
+			}else {
+				throw new EnderecoNaoEncontradoException("Endereço Vazio");
 			}
-
-			return this.usuarioRepository.save(usuarioExistente);
+			
 		} else {
 
 			throw new UsuarioNaoEncontradoException("Usuario(a) nao encontrado(a)");
