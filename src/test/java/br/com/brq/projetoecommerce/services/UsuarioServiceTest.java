@@ -1,8 +1,8 @@
 package br.com.brq.projetoecommerce.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -75,6 +75,15 @@ class UsuarioServiceTest {
 		assertThat(usuario.getTelefone()).isEqualTo(resultUsuario.getTelefone());
 		assertThat(resultUsuario.getUsuarioId() >= 0).isTrue();
 	}
+	
+	@Test
+	void salvarTestException() {
+		
+		UsuarioEntity usuario = createUsuarioSemEndereco();
+		
+		assertThrows(UsuarioNaoEncontradoException.class, 
+				() -> this.usuarioService.salvar(usuario));
+	} 
 
 	@Test
 	void buscarUsuarioIdSucessoTest() {
@@ -188,6 +197,12 @@ class UsuarioServiceTest {
 		return UsuarioEntity.builder().nome("Anderson").cpf("123.123.123-55")
 				.dataDeNascimento("1998, 05, 18").celular("91234-5678").telefone("1234-5678")
 				.email("boladinho@hotmail.com").enderecos(List.of(this.createValidEnderecoEntity())).build();
+	}
+	
+	private UsuarioEntity createUsuarioSemEndereco() {
+		return UsuarioEntity.builder().nome("Anderson").cpf("123.123.123-55")
+				.dataDeNascimento("1998, 05, 18").celular("91234-5678").telefone("1234-5678")
+				.email("boladinho@hotmail.com").build();
 	}
 
 	private UsuarioDTO createValidUsuarioDTO() {

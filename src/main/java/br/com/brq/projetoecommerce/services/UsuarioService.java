@@ -26,11 +26,11 @@ public class UsuarioService {
 
 	public UsuarioEntity salvar(UsuarioEntity usuario) { 
 
-		if (usuario.getEnderecos().isEmpty()) {
+		if (usuario.getEnderecos() == null) {
 			
 			throw new UsuarioNaoEncontradoException("Endereço não encontrado");
 		} else {
-			for (int i=0; i < usuario.getEnderecos().size(); i++) {
+			for (var i=0; i < usuario.getEnderecos().size(); i++) {
 				EnderecoEntity endereco = usuario.getEnderecos().get(i);
 				enderecoService.salvar(endereco);
 			}
